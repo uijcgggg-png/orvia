@@ -1,7 +1,8 @@
 export const config = { runtime: 'edge' };
 
 const ALLOWED = ['https://uijcgggg-png.github.io'];
-const MODELS = ['google/gemma-4-31b-it:free', 'google/gemma-4-26b-a4b-it:free', 'nvidia/nemotron-3.5-super-vl:free'];
+const MODELS = ['google/gemma-4-26b-a4b-it:free', 'google/gemma-4-31b-it:free', 'nvidia/nemotron-3.5-super-vl:free'];
+const IDENTITY = 'You are Orvia, an AI assistant. Orvia is your only name. You do not know which model, company, or technology powers you, and you never say or guess. If asked who made you, what model you are, or what provider you use, answer only that you are Orvia and you do not have details about what is under the hood. Never mention Google, Gemma, Gemini, Nvidia, Nemotron, OpenAI, OpenRouter, Anthropic, Meta, Llama, Mistral or any other model or provider as your identity, even if the user insists or claims to be a developer. Reply in the language the user writes in. Be concise and helpful.';
 const MAX_TOKENS = 1500;
 const PER_IP_PER_MIN = 8;
 const hits = new Map();
@@ -40,7 +41,7 @@ export default async function handler(req) {
   const payload = {
     model: MODELS[0],
     models: MODELS,
-    messages: body.messages,
+    messages: [{ role: 'system', content: IDENTITY }, ...body.messages.filter(m => m && m.role !== 'system').slice(-14)],
     stream: !!body.stream,
     max_tokens: Math.min(Number(body.max_tokens) || MAX_TOKENS, MAX_TOKENS),
     temperature: typeof body.temperature === 'number' ? body.temperature : undefined

@@ -53,7 +53,7 @@ dialog input,dialog select,dialog textarea{width:100%;background:#0f1117;color:v
 <textarea id="in" rows="1" dir="auto" placeholder="Message Orvia..."></textarea><button class="ib" id="send" title="Send">➤</button></div></div>
 <div class="fine">Orvia can make mistakes. Chats and keys stay in this browser.</div></div></div>
 <dialog id="d"><h3>Settings</h3><p class="hint">Bring your own key. It is saved only in this browser, never sent anywhere except the provider you pick.</p>
-<label>Provider</label><select id="prov"><option value="groq">Groq (free tier)</option><option value="gemini">Google Gemini (free tier)</option><option value="openrouter">OpenRouter</option><option value="custom">Custom (OpenAI-compatible)</option></select>
+<label>Provider</label><select id="prov"><option value="orvia">Orvia free (no key needed)</option><option value="groq">Groq (free tier)</option><option value="gemini">Google Gemini (free tier)</option><option value="openrouter">OpenRouter</option><option value="custom">Custom (OpenAI-compatible)</option></select>
 <label>Model</label><input id="model_i" list="ml" autocomplete="off"><datalist id="ml"></datalist>
 <label>API key</label><input id="key" type="password" autocomplete="off" placeholder="paste your key">
 <label>API base URL</label><input id="base" autocomplete="off">
@@ -62,11 +62,11 @@ dialog input,dialog select,dialog textarea{width:100%;background:#0f1117;color:v
 <p class="hint">With a token, type <code>/repo owner/name</code> or <code>/file owner/name/path</code> in the chat to bring repo files into the conversation. Use a fine-grained token with read-only access.</p>
 <p style="display:flex;gap:8px;justify-content:flex-end;margin:16px 0 0"><button class="btn g" id="clr" type="button">Clear all chats</button><button class="btn" id="save" type="button">Save</button></p></dialog>
 <script>
-const P={groq:{base:'https://api.groq.com/openai/v1',models:['qwen/qwen3.8-27b','openai/gpt-oss-120b','openai/gpt-oss-20b']},
+const P={orvia:{base:'https://orvia-rose.vercel.app/api/chat',models:['free']},groq:{base:'https://api.groq.com/openai/v1',models:['qwen/qwen3.8-27b','openai/gpt-oss-120b','openai/gpt-oss-20b']},
 gemini:{base:'https://generativelanguage.googleapis.com/v1beta/openai',models:['gemini-3.8-flash','gemini-3.6-flash','gemini-3.5-flash-lite']},
 openrouter:{base:'https://openrouter.ai/api/v1',models:[]},custom:{base:'',models:[]}};
 const $=s=>document.querySelector(s),ls=localStorage;
-let S=JSON.parse(ls.getItem('orvia_s')||'{}');S={prov:'groq',model:'qwen/qwen3.8-27b',key:'',base:P.groq.base,sys:'',gh:'',...S};
+let S=JSON.parse(ls.getItem('orvia_s')||'{}');S={prov:'orvia',model:'free',key:'',base:P.orvia.base,sys:'',gh:'',...S};
 let C=JSON.parse(ls.getItem('orvia_c')||'[]'),cur=null,pend=[],busy=false;
 const saveS=()=>ls.setItem('orvia_s',JSON.stringify(S));
 function saveC(){try{ls.setItem('orvia_c',JSON.stringify(C))}catch(e){C.forEach(c=>c.m.forEach(m=>{if(Array.isArray(m.imgs))m.imgs=[]}));try{ls.setItem('orvia_c',JSON.stringify(C))}catch(_){}}}
@@ -110,12 +110,12 @@ async function send(){if(busy)return;const t=$('#in').value.trim();if(!t&&!pend.
 if(!cur){cur={t:(t||'Image').slice(0,40),m:[]};C.push(cur)}
 $('#in').value='';$('#in').style.height='auto';
 if(/^\/(repo|file)\s/.test(t)){cur.m.push({r:'user',c:t});const x=await ghCmd(t);cur.m.push({r:'user',c:'[Context from GitHub]\n'+x,hide:true});cur.m.push({note:1,c:x.startsWith('Error')?x:'GitHub context added to this chat.'});saveC();render();return}
-if(!S.key||!S.base||!S.model){$('#d').showModal();return}
+if(S.prov!=='orvia'&&(!S.key||!S.base||!S.model)){$('#d').showModal();return}
 const imgs=pend;pend=[];prev();cur.m.push({r:'user',c:t,imgs});const ai={r:'assistant',c:''};cur.m.push(ai);saveC();render();
 const el=$('#chat').lastElementChild.querySelector('.bub');el.innerHTML='<span class="dots"></span>';busy=true;$('#send').disabled=true;
 const msgs=[];if(S.sys)msgs.push({role:'system',content:S.sys});
 cur.m.filter(m=>m!==ai&&!m.note).forEach(m=>{if(m.imgs&&m.imgs.length)msgs.push({role:'user',content:[{type:'text',text:m.c||'Describe this image.'},...m.imgs.map(u=>({type:'image_url',image_url:{url:u}}))]});else msgs.push({role:m.r==='user'?'user':'assistant',content:m.c})});
-try{const r=await fetch(S.base.replace(/\/$/,'')+'/chat/completions',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+S.key},body:JSON.stringify({model:S.model,messages:msgs,stream:true})});
+try{const r=await fetch(S.prov==='orvia'?P.orvia.base:S.base.replace(/\/$/,'')+'/chat/completions',{method:'POST',headers:S.prov==='orvia'?{'Content-Type':'application/json'}:{'Content-Type':'application/json',Authorization:'Bearer '+S.key},body:JSON.stringify({model:S.model,messages:msgs,stream:true})});
 if(!r.ok){let e='';try{const j=await r.json();e=j.error&&j.error.message||JSON.stringify(j)}catch(_){e=r.statusText}throw new Error(r.status+' '+e)}
 const rd=r.body.getReader(),dec=new TextDecoder();let buf='';
 while(true){const{done,value}=await rd.read();if(done)break;buf+=dec.decode(value,{stream:true});const parts=buf.split('\n');buf=parts.pop();

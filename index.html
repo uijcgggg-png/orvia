@@ -1,15 +1,16 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Orvia</title><meta name="theme-color" content="#0f1117">
+<title>Orvia</title><meta name="theme-color" content="#0f1117" id="tc">
 <link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="logo.svg"><link rel="apple-touch-icon" href="logo.svg">
 <style>
-:root{--bg:#0f1117;--side:#0b0d12;--card:#171a23;--line:#262a37;--tx:#e9ebf2;--mut:#8a90a6;--a:#7c5cff;--b:#22d3ee;--user:#232842}
+:root{--bg:#0f1117;--side:#0b0d12;--card:#171a23;--line:#262a37;--tx:#e9ebf2;--mut:#8a90a6;--a:#7c5cff;--b:#22d3ee;--user:#232842;--hov:#171a23;--sel:#1c2030;--code:#0a0c12;--codeh:#141722;--inl:#222637;--inp:#0f1117}
+:root[data-theme=light]{--bg:#ffffff;--side:#f6f7fb;--card:#f1f3f9;--line:#dfe3ee;--tx:#171a23;--mut:#667089;--user:#e8e6ff;--hov:#e9ecf5;--sel:#e2e6f3;--code:#f6f7fb;--codeh:#e9ecf5;--inl:#e6e9f3;--inp:#fff}
 *{box-sizing:border-box}html,body{height:100%}body{margin:0;background:var(--bg);color:var(--tx);font:15.5px/1.6 system-ui,-apple-system,Segoe UI,Roboto,"Noto Sans Arabic",sans-serif;display:flex;overflow:hidden}
 button{font:inherit;color:inherit;cursor:pointer}
 #side{width:272px;background:var(--side);border-right:1px solid var(--line);display:flex;flex-direction:column;flex-shrink:0;transition:transform .2s}
 .brand{display:flex;align-items:center;gap:10px;padding:16px 16px 8px;font-weight:700;font-size:18px}.brand img{width:28px;height:28px}
-.nb{margin:8px 12px;padding:10px 12px;border:1px solid var(--line);background:transparent;border-radius:12px;text-align:left;display:flex;gap:8px;align-items:center}.nb:hover,.ci:hover{background:#171a23}
-#list{flex:1;overflow:auto;padding:4px 8px}.ci{display:flex;align-items:center;gap:6px;padding:9px 10px;border-radius:10px;cursor:pointer;color:var(--mut)}.ci.on{background:#1c2030;color:var(--tx)}
+.nb{margin:8px 12px;padding:10px 12px;border:1px solid var(--line);background:transparent;border-radius:12px;text-align:left;display:flex;gap:8px;align-items:center}.nb:hover,.ci:hover{background:var(--hov)}
+#list{flex:1;overflow:auto;padding:4px 8px}.ci{display:flex;align-items:center;gap:6px;padding:9px 10px;border-radius:10px;cursor:pointer;color:var(--mut)}.ci.on{background:var(--sel);color:var(--tx)}
 .ci span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ci button{background:none;border:0;color:var(--mut);opacity:0;padding:0 4px}.ci:hover button{opacity:1}
 .sf{padding:10px 12px;border-top:1px solid var(--line)}.sf button{width:100%;text-align:left;background:none;border:0;padding:9px 10px;border-radius:10px;color:var(--mut)}.sf button:hover{background:#171a23;color:var(--tx)}
 #main{flex:1;display:flex;flex-direction:column;min-width:0;height:100%}
@@ -21,10 +22,10 @@ button{font:inherit;color:inherit;cursor:pointer}
 .a .bub{width:100%}.a .av{width:28px;height:28px;border-radius:50%;flex-shrink:0;margin-right:12px;margin-top:2px}
 .bub img.at{max-width:240px;max-height:240px;border-radius:12px;display:block;margin:0 0 8px}
 .bub p{margin:.5em 0}.bub h1,.bub h2,.bub h3{margin:.9em 0 .3em;line-height:1.3}.bub h1{font-size:1.4em}.bub h2{font-size:1.2em}.bub h3{font-size:1.05em}
-.bub ul,.bub ol{padding-inline-start:1.4em;margin:.4em 0}.bub code{background:#222637;padding:.1em .35em;border-radius:6px;font:13.5px ui-monospace,Menlo,Consolas,monospace}
-.cb{background:#0a0c12;border:1px solid var(--line);border-radius:12px;margin:.7em 0;overflow:hidden;direction:ltr;text-align:left}
-.ch{display:flex;justify-content:space-between;align-items:center;padding:6px 12px;background:#141722;color:var(--mut);font-size:12.5px}
-.ch button{background:none;border:0;color:var(--mut);padding:2px 6px;border-radius:6px}.ch button:hover{color:var(--tx);background:#222637}
+.bub ul,.bub ol{padding-inline-start:1.4em;margin:.4em 0}.bub code{background:var(--inl);padding:.1em .35em;border-radius:6px;font:13.5px ui-monospace,Menlo,Consolas,monospace}
+.cb{background:var(--code);border:1px solid var(--line);border-radius:12px;margin:.7em 0;overflow:hidden;direction:ltr;text-align:left}
+.ch{display:flex;justify-content:space-between;align-items:center;padding:6px 12px;background:var(--codeh);color:var(--mut);font-size:12.5px}
+.ch button{background:none;border:0;color:var(--mut);padding:2px 6px;border-radius:6px}.ch button:hover{color:var(--tx);background:var(--inl)}
 .cb pre{margin:0;padding:12px;overflow:auto}.cb code{background:none;padding:0;font-size:13.5px;white-space:pre}
 .bub a{color:var(--b)}.note{color:var(--mut);font-size:13px;text-align:center;margin:12px 0}
 .err{color:#ff8a8a}.dots::after{content:"●";animation:p 1s infinite;color:var(--mut)}@keyframes p{50%{opacity:.2}}
@@ -33,40 +34,63 @@ button{font:inherit;color:inherit;cursor:pointer}
 #comp{padding:8px 16px 16px}.box{max-width:780px;margin:0 auto;background:var(--card);border:1px solid var(--line);border-radius:22px;padding:8px 10px;display:flex;flex-direction:column;gap:6px}
 #prev{display:none;gap:8px;padding:4px 4px 0}#prev div{position:relative}#prev img{height:62px;border-radius:10px}#prev b{position:absolute;top:-6px;right:-6px;background:#000c;border-radius:50%;width:20px;height:20px;text-align:center;line-height:20px;cursor:pointer;font-size:13px}
 .in{display:flex;align-items:flex-end;gap:8px}textarea{flex:1;background:none;border:0;outline:0;color:var(--tx);font:inherit;resize:none;max-height:200px;padding:8px 4px}
-.ib{width:38px;height:38px;border-radius:50%;border:0;background:transparent;font-size:20px;color:var(--mut)}.ib:hover{background:#222637;color:var(--tx)}
+.ib{width:38px;height:38px;border-radius:50%;border:0;background:transparent;font-size:20px;color:var(--mut)}.ib:hover{background:var(--inl);color:var(--tx)}
 #send{background:linear-gradient(135deg,var(--a),var(--b));color:#06070d;font-weight:700}#send:disabled{opacity:.4}
 .fine{text-align:center;color:var(--mut);font-size:12px;margin-top:8px}
 dialog{background:var(--card);color:var(--tx);border:1px solid var(--line);border-radius:18px;width:min(480px,94vw);padding:20px}dialog::backdrop{background:#000b}
 dialog h3{margin:0 0 6px}dialog label{display:block;margin:12px 0 4px;color:var(--mut);font-size:13px}
-dialog input,dialog select,dialog textarea{width:100%;background:#0f1117;color:var(--tx);border:1px solid var(--line);border-radius:10px;padding:9px;font:inherit;max-height:none}
+dialog input,dialog select,dialog textarea{width:100%;background:var(--inp);color:var(--tx);border:1px solid var(--line);border-radius:10px;padding:9px;font:inherit;max-height:none}
 .btn{background:linear-gradient(90deg,var(--a),var(--b));color:#06070d;border:0;border-radius:10px;padding:9px 18px;font-weight:700}.btn.g{background:transparent;color:var(--tx);border:1px solid var(--line)}
 .hint{color:var(--mut);font-size:12.5px;margin:6px 0 0}
-@media(max-width:760px){#side{position:fixed;z-index:5;height:100%;transform:translateX(-100%)}#side.open{transform:none}#menu{display:block}.u .bub{max-width:92%}}
+.brand{position:relative}#sclose{display:none;margin-left:auto;background:none;border:0;font-size:22px;color:var(--mut);width:40px;height:40px;border-radius:50%}
+#bd{display:none;position:fixed;inset:0;background:#0008;z-index:4;-webkit-tap-highlight-color:transparent}
+.acts{display:flex;gap:4px;margin-top:4px}.acts button{background:none;border:0;color:var(--mut);padding:2px 8px;border-radius:6px;font-size:12.5px}.acts button:hover{background:var(--inl);color:var(--tx)}
+.ib.rec{background:#e5484d;color:#fff;animation:p 1s infinite}
+.tabs{display:flex;gap:4px;margin:10px 0 0;border-bottom:1px solid var(--line);overflow-x:auto}.tabs button{background:none;border:0;padding:8px 12px;color:var(--mut);border-bottom:2px solid transparent;white-space:nowrap}.tabs button.on{color:var(--tx);border-color:var(--a)}
+.pane{display:none;min-height:230px;max-height:60vh;overflow:auto;padding-bottom:4px}.pane.on{display:block}
+.seg{display:flex;gap:6px;flex-wrap:wrap}.seg button{background:var(--inp);border:1px solid var(--line);border-radius:10px;padding:8px 14px}.seg button.on{border-color:var(--a);box-shadow:0 0 0 1px var(--a) inset}
+.plans{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}.plan{border:1px solid var(--line);border-radius:16px;padding:16px;background:var(--inp)}.plan.pro{border-color:var(--a)}
+.plan h4{margin:0 0 2px;font-size:18px}.plan .pr{color:var(--mut);font-size:13px;margin-bottom:8px}.plan ul{padding-inline-start:18px;margin:8px 0;font-size:14px}.plan .btn{width:100%;margin-top:6px}.plan .btn:disabled{opacity:.5;cursor:not-allowed}
+.tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:999px;background:var(--a);color:#fff;margin-inline-start:6px;vertical-align:middle}
+dialog{max-height:92vh;overflow:auto}
+@media(max-width:760px){#side{position:fixed;z-index:5;height:100%;transform:translateX(-100%);box-shadow:4px 0 24px #0008;width:min(300px,84vw)}#side.open{transform:none}#side.open~#bd,body.so #bd{display:block}#menu{display:block;width:40px;height:40px}#sclose{display:block}.u .bub{max-width:92%}.plans{grid-template-columns:1fr}.ci button{opacity:1}}
 </style></head><body>
-<aside id="side"><div class="brand"><img src="logo.svg" alt="">Orvia</div>
+<aside id="side"><div class="brand"><img src="logo.svg" alt="">Orvia<button id="sclose" aria-label="Close menu">✕</button></div>
 <button class="nb" id="new">＋ New chat</button><div id="list"></div>
-<div class="sf"><button id="setb">⚙ Settings</button></div></aside>
-<div id="main"><div id="top"><button id="menu" aria-label="Menu">☰</button><b>Orvia</b><span id="model"></span></div>
+<div class="sf"><button id="planb" data-i="plans">✨ Plans</button><button id="setb" data-i="settings">⚙ Settings</button></div></aside><div id="bd"></div>
+<div id="main"><div id="top"><button id="menu" aria-label="Menu">☰</button><b>Orvia</b><span id="model" style="display:none"></span></div>
 <div id="msgs"><div class="w" id="chat"></div></div>
 <div id="comp"><div class="box"><div id="prev"></div><div class="in">
 <button class="ib" id="att" title="Attach image"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.4 11.1l-9.2 9.2a6 6 0 0 1-8.5-8.5l9.2-9.2a4 4 0 0 1 5.7 5.7l-9.2 9.2a2 2 0 0 1-2.8-2.8l8.5-8.5"/></svg></button><input type="file" id="file" accept="image/*" multiple hidden>
-<textarea id="in" rows="1" dir="auto" placeholder="Message Orvia..."></textarea><button class="ib" id="send" title="Send">➤</button></div></div>
-<div class="fine">Orvia can make mistakes. Chats and keys stay in this browser.</div></div></div>
-<dialog id="d"><h3>Settings</h3><p class="hint">Bring your own key. It is saved only in this browser, never sent anywhere except the provider you pick.</p>
-<label>Provider</label><select id="prov"><option value="orvia">Orvia free (no key needed)</option><option value="groq">Groq (free tier)</option><option value="gemini">Google Gemini (free tier)</option><option value="openrouter">OpenRouter</option><option value="custom">Custom (OpenAI-compatible)</option></select>
+<button class="ib" id="mic" title="Voice input"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v4"/></svg></button><textarea id="in" rows="1" dir="auto" placeholder="Message Orvia..." data-ph="ph"></textarea><button class="ib" id="send" title="Send">➤</button></div></div>
+<div class="fine">Orvia can make mistakes. <span data-i="fine">Chats are saved in this browser only.</span></div></div></div>
+<dialog id="d"><div style="display:flex;align-items:center"><h3 style="flex:1" data-i="settings">Settings</h3><button class="ib" id="dx" aria-label="Close">✕</button></div>
+<div class="tabs"><button class="on" data-t="g" data-i="general">General</button><button data-t="c" data-i="chats">Chats</button><button data-t="v" data-i="adv">Advanced</button><button data-t="a" data-i="about">About</button></div>
+<div class="pane on" id="p-g"><label data-i="theme">Theme</label><div class="seg" id="seg-theme"><button data-v="dark" data-i="dark">Dark</button><button data-v="light" data-i="light">Light</button><button data-v="system" data-i="system">System</button></div>
+<label data-i="language">Language</label><div class="seg" id="seg-lang"><button data-v="en">English</button><button data-v="ar">العربية</button></div>
+<label data-i="voice">Voice</label><select id="vlang"><option value="auto" data-i="vauto">Same as app language</option><option value="en-US">English (US)</option><option value="ar-EG">العربية (مصر)</option><option value="ar-SA">العربية (السعودية)</option></select>
+<label style="display:flex;gap:8px;align-items:center;margin-top:14px;color:var(--tx)"><input type="checkbox" id="autoread" style="width:auto"><span data-i="autoread">Read replies aloud automatically</span></label></div>
+<div class="pane" id="p-c"><p class="hint" data-i="chatsh">Your chats live only in this browser.</p><p><button class="btn g" id="clr" type="button" data-i="clear">Clear all chats</button></p></div>
+<div class="pane" id="p-v"><p class="hint" data-i="advh">Optional. Use your own key from another provider. It is saved only in this browser.</p>
+<label>Provider</label><select id="prov"><option value="orvia">Orvia (default, no key needed)</option><option value="groq">Groq</option><option value="gemini">Google Gemini</option><option value="openrouter">OpenRouter</option><option value="custom">Custom (OpenAI-compatible)</option></select>
 <label>Model</label><input id="model_i" list="ml" autocomplete="off"><datalist id="ml"></datalist>
 <label>API key</label><input id="key" type="password" autocomplete="off" placeholder="paste your key">
 <label>API base URL</label><input id="base" autocomplete="off">
 <label>System prompt (optional)</label><textarea id="sys" rows="2"></textarea>
 <label>GitHub token (optional)</label><input id="gh" type="password" autocomplete="off" placeholder="github_pat_... (read-only recommended)">
-<p class="hint">With a token, type <code>/repo owner/name</code> or <code>/file owner/name/path</code> in the chat to bring repo files into the conversation. Use a fine-grained token with read-only access.</p>
-<p style="display:flex;gap:8px;justify-content:flex-end;margin:16px 0 0"><button class="btn g" id="clr" type="button">Clear all chats</button><button class="btn" id="save" type="button">Save</button></p></dialog>
+<p class="hint">With a token, type <code>/repo owner/name</code> or <code>/file owner/name/path</code> in the chat to bring repo files into the conversation.</p></div>
+<div class="pane" id="p-a"><p><b>Orvia</b> v2</p><p class="hint" data-i="abouth">Orvia is an AI assistant for chat, code and images. Replies can be wrong, so check anything important.</p><p class="hint" data-i="privacy">Chats are stored in your browser. Messages are sent to Orvia's server only to get a reply.</p></div>
+<p style="display:flex;gap:8px;justify-content:flex-end;margin:16px 0 0"><button class="btn" id="save" type="button" data-i="done">Done</button></p></dialog>
+<dialog id="pl"><div style="display:flex;align-items:center"><h3 style="flex:1" data-i="plans">Plans</h3><button class="ib" id="plx" aria-label="Close">✕</button></div>
+<p class="hint" data-i="plansh">Preview only. Plans are not available yet and nothing is charged.</p>
+<div class="plans"><div class="plan"><h4>Free</h4><div class="pr" data-i="cur">Your current plan</div><ul><li data-i="f1">Chat, code help and images</li><li data-i="f2">Shared daily limit</li><li data-i="f3">Standard speed</li></ul><button class="btn g" disabled data-i="curb">Current plan</button></div>
+<div class="plan pro"><h4>Pro<span class="tag" data-i="soon">Coming soon</span></h4><div class="pr" data-i="tba">Pricing to be announced</div><ul><li data-i="p1">Higher daily limits</li><li data-i="p2">Faster replies</li><li data-i="p3">Priority access to new features</li></ul><button class="btn" disabled data-i="soonb">Coming soon</button></div></div></dialog>
 <script>
-const P={orvia:{base:'https://orvia-rose.vercel.app/api/chat',models:['free']},groq:{base:'https://api.groq.com/openai/v1',models:['qwen/qwen3.8-27b','openai/gpt-oss-120b','openai/gpt-oss-20b']},
+const P={orvia:{base:'https://orvia-rose.vercel.app/api/chat',models:['orvia']},groq:{base:'https://api.groq.com/openai/v1',models:['qwen/qwen3.8-27b','openai/gpt-oss-120b','openai/gpt-oss-20b']},
 gemini:{base:'https://generativelanguage.googleapis.com/v1beta/openai',models:['gemini-3.8-flash','gemini-3.6-flash','gemini-3.5-flash-lite']},
 openrouter:{base:'https://openrouter.ai/api/v1',models:[]},custom:{base:'',models:[]}};
 const $=s=>document.querySelector(s),ls=localStorage;
-let S=JSON.parse(ls.getItem('orvia_s')||'{}');S={prov:'orvia',model:'free',key:'',base:P.orvia.base,sys:'',gh:'',...S};
+let S=JSON.parse(ls.getItem('orvia_s')||'{}');S={prov:'orvia',model:'orvia',key:'',base:P.orvia.base,sys:'',gh:'',theme:'dark',lang:'en',vlang:'auto',autoread:false,...S};if(S.model==='free')S.model='orvia';
 let C=JSON.parse(ls.getItem('orvia_c')||'[]'),cur=null,pend=[],busy=false;
 const saveS=()=>ls.setItem('orvia_s',JSON.stringify(S));
 function saveC(){try{ls.setItem('orvia_c',JSON.stringify(C))}catch(e){C.forEach(c=>c.m.forEach(m=>{if(Array.isArray(m.imgs))m.imgs=[]}));try{ls.setItem('orvia_c',JSON.stringify(C))}catch(_){}}}
@@ -83,17 +107,17 @@ else if(m=ln.match(/^\s*[-*]\s+(.*)/)){if(list!=='ul'){close();out.push('<ul>');
 else if(m=ln.match(/^\s*\d+[.)]\s+(.*)/)){if(list!=='ol'){close();out.push('<ol>');list='ol'}out.push('<li>'+m[1]+'</li>')}
 else if(!ln.trim()){close()}else if(/^\u0000\d+\u0000$/.test(ln.trim())){close();out.push(ln.trim())}else{close();out.push('<p>'+ln+'</p>')}}
 close();return out.join('').replace(/\u0000(\d+)\u0000/g,(_,i)=>{const[l,c]=blocks[i];return '<div class="cb"><div class="ch"><span>'+(esc(l)||'code')+'</span><button data-copy>Copy</button></div><pre><code>'+esc(c)+'</code></pre></div>'})}
-function cmodel(){return S.model||'no model'}
+function cmodel(){return S.prov==='orvia'?'Orvia':(S.model||'no model')}
 function renderList(){const l=$('#list');l.innerHTML='';C.slice().reverse().forEach(c=>{const d=document.createElement('div');d.className='ci'+(c===cur?' on':'');d.innerHTML='<span dir="auto">'+esc(c.t)+'</span><button title="Delete">✕</button>';
-d.onclick=()=>{cur=c;render();$('#side').classList.remove('open')};d.querySelector('button').onclick=e=>{e.stopPropagation();C=C.filter(x=>x!==c);if(cur===c)cur=null;saveC();render()};l.append(d)})}
+d.onclick=()=>{cur=c;render();closeS()};d.querySelector('button').onclick=e=>{e.stopPropagation();C=C.filter(x=>x!==c);if(cur===c)cur=null;saveC();render()};l.append(d)})}
 function bubble(m){const r=document.createElement('div');r.className='row '+(m.r==='user'?'u':'a');
 const imgs=(m.imgs||[]).map(i=>'<img class="at" src="'+i+'">').join('');
-r.innerHTML=(m.r==='user'?'':'<img class="av" src="logo.svg" alt="">')+'<div class="bub" dir="auto">'+imgs+(m.r==='user'?esc(m.c):md(m.c))+'</div>';return r}
+r.innerHTML=(m.r==='user'?'':'<img class="av" src="logo.svg" alt="">')+'<div class="bub" dir="auto">'+imgs+(m.r==='user'?esc(m.c):md(m.c))+'</div>';if(m.r!=='user'){const b=r.querySelector('.bub');const a=document.createElement('div');a.className='acts';a.innerHTML='<button data-say>🔊 '+T('listen')+'</button><button data-copym>'+T('copy')+'</button>';b.append(a)}return r}
 function render(){renderList();$('#model').textContent=cmodel();const ch=$('#chat');ch.innerHTML='';
-if(!cur||!cur.m.length){ch.innerHTML='<div id="empty"><img src="logo.svg" alt=""><h1>How can I help?</h1><p>Ask for code, attach an image, or just chat.</p><div class="chips"><button>Explain how async/await works</button><button>Write a Python script to rename files</button><button>Help me debug my code</button></div></div>';
+if(!cur||!cur.m.length){ch.innerHTML='<div id="empty"><img src="logo.svg" alt=""><h1>'+T('help')+'</h1><p>'+T('helpsub')+'</p><div class="chips"><button>Explain how async/await works</button><button>Write a Python script to rename files</button><button>Help me debug my code</button></div></div>';
 ch.querySelectorAll('.chips button').forEach(b=>b.onclick=()=>{$('#in').value=b.textContent;send()});return}
 cur.m.forEach(m=>{if(m.note){const n=document.createElement('div');n.className='note';n.textContent=m.c;ch.append(n)}else ch.append(bubble(m))});$('#msgs').scrollTop=1e9}
-document.addEventListener('click',e=>{const b=e.target.closest('[data-copy]');if(b){navigator.clipboard.writeText(b.closest('.cb').querySelector('code').textContent);b.textContent='Copied';setTimeout(()=>b.textContent='Copy',1200)}});
+document.addEventListener('click',e=>{const sy=e.target.closest('[data-say]');if(sy){const t=sy.closest('.bub').cloneNode(true);t.querySelectorAll('.acts,.cb').forEach(x=>x.remove());speak(t.textContent);return}const cm=e.target.closest('[data-copym]');if(cm){const t=cm.closest('.bub').cloneNode(true);t.querySelectorAll('.acts').forEach(x=>x.remove());navigator.clipboard.writeText(t.textContent);cm.textContent='✓';setTimeout(()=>cm.textContent=T('copy'),1200);return}const b=e.target.closest('[data-copy]');if(b){navigator.clipboard.writeText(b.closest('.cb').querySelector('code').textContent);b.textContent='Copied';setTimeout(()=>b.textContent='Copy',1200)}});
 function shrink(f){return new Promise(res=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,1280/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',.82))};im.src=r.result};r.readAsDataURL(f)})}
 function prev(){const p=$('#prev');p.style.display=pend.length?'flex':'none';p.innerHTML='';pend.forEach((s,i)=>{const d=document.createElement('div');d.innerHTML='<img src="'+s+'"><b>×</b>';d.querySelector('b').onclick=()=>{pend.splice(i,1);prev()};p.append(d)})}
 $('#att').onclick=()=>$('#file').click();
@@ -101,32 +125,57 @@ $('#file').onchange=async e=>{for(const f of e.target.files)pend.push(await shri
 $('#in').addEventListener('paste',async e=>{for(const it of e.clipboardData.items)if(it.type.startsWith('image/')){pend.push(await shrink(it.getAsFile()));prev()}});
 $('#in').addEventListener('input',e=>{e.target.style.height='auto';e.target.style.height=Math.min(200,e.target.scrollHeight)+'px'});
 $('#in').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&!/Mobi|Android/i.test(navigator.userAgent)){e.preventDefault();send()}});
-$('#send').onclick=send;$('#new').onclick=()=>{cur=null;render();$('#side').classList.remove('open')};$('#menu').onclick=()=>$('#side').classList.toggle('open');
+$('#send').onclick=send;$('#new').onclick=()=>{cur=null;render();closeS()};const openS=()=>{$('#side').classList.add('open');document.body.classList.add('so')},closeS=()=>{$('#side').classList.remove('open');document.body.classList.remove('so')};$('#menu').onclick=openS;$('#sclose').onclick=closeS;$('#bd').onclick=closeS;document.addEventListener('keydown',e=>{if(e.key==='Escape')closeS()});
 async function gh(path){const h={Accept:'application/vnd.github+json'};if(S.gh)h.Authorization='Bearer '+S.gh;const r=await fetch('https://api.github.com'+path,{headers:h});if(!r.ok)throw new Error('GitHub '+r.status);return r.json()}
 async function ghCmd(t){let m;try{if(m=t.match(/^\/repo\s+([\w.-]+\/[\w.-]+)/)){const[o,n]=m[1].split('/');const root=await gh(`/repos/${o}/${n}/contents`);let txt=`GitHub repo ${m[1]}, top-level files:\n`+root.map(x=>(x.type==='dir'?'[dir] ':'')+x.name).join('\n');
 const rd=root.find(x=>/^readme/i.test(x.name));if(rd){const f=await gh(`/repos/${o}/${n}/contents/${rd.path}`);txt+='\n\n'+rd.name+':\n'+decodeURIComponent(escape(atob(f.content.replace(/\n/g,'')))).slice(0,12000)}return txt}
 if(m=t.match(/^\/file\s+([\w.-]+)\/([\w.-]+)\/(\S+)/)){const f=await gh(`/repos/${m[1]}/${m[2]}/contents/${m[3]}`);if(Array.isArray(f))return 'Directory '+m[3]+':\n'+f.map(x=>x.name).join('\n');return 'File '+m[3]+' from '+m[1]+'/'+m[2]+':\n'+decodeURIComponent(escape(atob(f.content.replace(/\n/g,'')))).slice(0,20000)}}catch(e){return 'Error: '+e.message+(S.gh?'':' (add a GitHub token in Settings for private repos)')}return null}
-async function send(){if(busy)return;const t=$('#in').value.trim();if(!t&&!pend.length)return;
+let lastSend=0;async function send(){if(busy)return;if(Date.now()-lastSend<2500){toast(T('slow'));return}lastSend=Date.now();const t=$('#in').value.trim();if(!t&&!pend.length)return;
 if(!cur){cur={t:(t||'Image').slice(0,40),m:[]};C.push(cur)}
 $('#in').value='';$('#in').style.height='auto';
 if(/^\/(repo|file)\s/.test(t)){cur.m.push({r:'user',c:t});const x=await ghCmd(t);cur.m.push({r:'user',c:'[Context from GitHub]\n'+x,hide:true});cur.m.push({note:1,c:x.startsWith('Error')?x:'GitHub context added to this chat.'});saveC();render();return}
 if(S.prov!=='orvia'&&(!S.key||!S.base||!S.model)){$('#d').showModal();return}
 const imgs=pend;pend=[];prev();cur.m.push({r:'user',c:t,imgs});const ai={r:'assistant',c:''};cur.m.push(ai);saveC();render();
 const el=$('#chat').lastElementChild.querySelector('.bub');el.innerHTML='<span class="dots"></span>';busy=true;$('#send').disabled=true;
-const msgs=[];if(S.sys)msgs.push({role:'system',content:S.sys});
-cur.m.filter(m=>m!==ai&&!m.note).forEach(m=>{if(m.imgs&&m.imgs.length)msgs.push({role:'user',content:[{type:'text',text:m.c||'Describe this image.'},...m.imgs.map(u=>({type:'image_url',image_url:{url:u}}))]});else msgs.push({role:m.r==='user'?'user':'assistant',content:m.c})});
+const msgs=[];if(S.sys&&S.prov!=='orvia')msgs.push({role:'system',content:S.sys});
+const hist=cur.m.filter(m=>m!==ai&&!m.note).slice(-14),lastImg=hist.map(m=>!!(m.imgs&&m.imgs.length)).lastIndexOf(true);hist.forEach((m,ix)=>{if(ix!==lastImg&&m.imgs&&m.imgs.length)m={...m,c:(m.c||'')+' [image omitted]',imgs:[]};if(m.imgs&&m.imgs.length)msgs.push({role:'user',content:[{type:'text',text:m.c||'Describe this image.'},...m.imgs.map(u=>({type:'image_url',image_url:{url:u}}))]});else msgs.push({role:m.r==='user'?'user':'assistant',content:m.c})});
 try{const r=await fetch(S.prov==='orvia'?P.orvia.base:S.base.replace(/\/$/,'')+'/chat/completions',{method:'POST',headers:S.prov==='orvia'?{'Content-Type':'application/json'}:{'Content-Type':'application/json',Authorization:'Bearer '+S.key},body:JSON.stringify({model:S.model,messages:msgs,stream:true})});
 if(!r.ok){let e='';try{const j=await r.json();e=j.error&&j.error.message||JSON.stringify(j)}catch(_){e=r.statusText}throw new Error(r.status+' '+e)}
 const rd=r.body.getReader(),dec=new TextDecoder();let buf='';
 while(true){const{done,value}=await rd.read();if(done)break;buf+=dec.decode(value,{stream:true});const parts=buf.split('\n');buf=parts.pop();
-for(const p of parts){if(!p.startsWith('data:'))continue;const d=p.slice(5).trim();if(d==='[DONE]')continue;try{const j=JSON.parse(d);const dl=j.choices&&j.choices[0]&&j.choices[0].delta&&j.choices[0].delta.content;if(dl){ai.c+=dl;el.innerHTML=md(ai.c);$('#msgs').scrollTop=1e9}}catch(_){}}}
-if(!ai.c)el.textContent='(empty reply)'}catch(e){ai.c='';el.innerHTML='<span class="err">'+esc(String(e.message||e))+'</span><div class="note" style="text-align:left">Check the key, model name and provider in Settings.</div>';cur.m=cur.m.filter(m=>m!==ai)}
+for(const p of parts){if(!p.startsWith('data:'))continue;const d=p.slice(5).trim();if(d==='[DONE]')continue;try{const j=JSON.parse(d);const dl=j.choices&&j.choices[0]&&j.choices[0].delta&&j.choices[0].delta.content;if(dl){ai.c+=dl;ai.c=ai.c;el.innerHTML=md(ai.c);$('#msgs').scrollTop=1e9}}catch(_){}}}
+if(!ai.c)el.textContent='(empty reply)';else{cur.m=cur.m;if(S.autoread)speak(ai.c)}}catch(e){ai.c='';el.innerHTML='<span class="err">'+esc(friendly(e))+'</span>';cur.m=cur.m.filter(m=>m!==ai)}
 busy=false;$('#send').disabled=false;saveC();renderList()}
-function fillSet(){$('#prov').value=S.prov;$('#model_i').value=S.model;$('#key').value=S.key;$('#base').value=S.base;$('#sys').value=S.sys;$('#gh').value=S.gh;ml()}
+function fillSet(){$('#prov').value=S.prov;$('#model_i').value=S.model;$('#key').value=S.key;$('#base').value=S.base;$('#sys').value=S.sys;$('#gh').value=S.gh;$('#vlang').value=S.vlang;$('#autoread').checked=S.autoread;mark();ml()}
+function mark(){document.querySelectorAll('#seg-theme button').forEach(b=>b.classList.toggle('on',b.dataset.v===S.theme));document.querySelectorAll('#seg-lang button').forEach(b=>b.classList.toggle('on',b.dataset.v===S.lang))}
 function ml(){$('#ml').innerHTML=(P[$('#prov').value].models).map(m=>'<option value="'+m+'">').join('')}
 $('#prov').onchange=()=>{const p=$('#prov').value;$('#base').value=P[p].base;$('#model_i').value=P[p].models[0]||'';ml()};
-$('#setb').onclick=()=>{fillSet();$('#d').showModal()};$('#model').onclick=()=>{fillSet();$('#d').showModal()};
-$('#save').onclick=()=>{S={prov:$('#prov').value,model:$('#model_i').value.trim(),key:$('#key').value.trim(),base:$('#base').value.trim(),sys:$('#sys').value,gh:$('#gh').value.trim()};saveS();$('#d').close();$('#model').textContent=cmodel()};
-$('#clr').onclick=()=>{if(confirm('Delete all chats?')){C=[];cur=null;saveC();render()}};
+const openSet=()=>{fillSet();$('#d').showModal();closeS()};$('#setb').onclick=openSet;$('#model').onclick=openSet;
+$('#planb').onclick=()=>{$('#pl').showModal();closeS()};$('#plx').onclick=()=>$('#pl').close();$('#dx').onclick=()=>$('#save').click();
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('on',x===b));document.querySelectorAll('.pane').forEach(p=>p.classList.toggle('on',p.id==='p-'+b.dataset.t))});
+$('#seg-theme').onclick=e=>{const v=e.target.dataset.v;if(v){S.theme=v;saveS();theme();mark()}};
+$('#seg-lang').onclick=e=>{const v=e.target.dataset.v;if(v){S.lang=v;saveS();lang();mark();render()}};
+$('#vlang').onchange=()=>{S.vlang=$('#vlang').value;saveS()};$('#autoread').onchange=()=>{S.autoread=$('#autoread').checked;saveS()};
+$('#save').onclick=()=>{const p=$('#prov').value;S.prov=p;S.model=$('#model_i').value.trim()||P[p].models[0]||'';S.key=$('#key').value.trim();S.base=$('#base').value.trim();S.sys=$('#sys').value;S.gh=$('#gh').value.trim();saveS();$('#d').close();$('#model').textContent=cmodel()};
+$('#clr').onclick=()=>{if(confirm(T('clearq'))){C=[];cur=null;saveC();render();$('#d').close()}};
+// i18n
+const I={en:{settings:'Settings',plans:'Plans',general:'General',chats:'Chats',adv:'Advanced',about:'About',theme:'Theme',dark:'Dark',light:'Light',system:'System',language:'Language',voice:'Voice language',vauto:'Same as app language',autoread:'Read replies aloud automatically',chatsh:'Your chats live only in this browser.',clear:'Clear all chats',advh:'Optional. Use your own key from another provider. It is saved only in this browser.',abouth:'Orvia is an AI assistant for chat, code and images. Replies can be wrong, so check anything important.',privacy:"Chats are stored in your browser. Messages are sent to Orvia's server only to get a reply.",done:'Done',plansh:'Preview only. Plans are not available yet and nothing is charged.',cur:'Your current plan',f1:'Chat, code help and images',f2:'Shared daily limit',f3:'Standard speed',curb:'Current plan',soon:'Coming soon',tba:'Pricing to be announced',p1:'Higher daily limits',p2:'Faster replies',p3:'Priority access to new features',soonb:'Coming soon',fine:'Orvia can make mistakes. Chats are saved in this browser only.',ph:'Message Orvia...',help:'How can I help?',helpsub:'Ask for code, attach an image, or just chat.',listen:'Listen',copy:'Copy',slow:'Please wait a moment before sending again.',clearq:'Delete all chats?',nomic:'Voice input is not supported in this browser.',micdeny:'Microphone permission was denied.',busy:'Orvia is busy right now. Please try again in a bit.',limit:'Orvia has reached its daily limit. Please try again tomorrow.',net:'Could not reach Orvia. Check your connection.'},
+ar:{settings:'الإعدادات',plans:'الباقات',general:'عام',chats:'المحادثات',adv:'متقدم',about:'حول',theme:'المظهر',dark:'داكن',light:'فاتح',system:'حسب الجهاز',language:'اللغة',voice:'لغة الصوت',vauto:'نفس لغة التطبيق',autoread:'قراءة الردود بصوت عالٍ تلقائيًا',chatsh:'محادثاتك محفوظة في هذا المتصفح فقط.',clear:'مسح كل المحادثات',advh:'اختياري. استخدم مفتاحك الخاص من مزوّد آخر. يُحفظ في هذا المتصفح فقط.',abouth:'Orvia مساعد ذكي للدردشة والبرمجة والصور. قد يخطئ، فراجع أي شيء مهم.',privacy:'المحادثات محفوظة في متصفحك. الرسائل تُرسل لسيرفر Orvia فقط للحصول على رد.',done:'تم',plansh:'معاينة فقط. الباقات غير متاحة بعد ولا يتم خصم أي مبلغ.',cur:'باقتك الحالية',f1:'دردشة ومساعدة برمجية وصور',f2:'حد يومي مشترك',f3:'سرعة عادية',curb:'الباقة الحالية',soon:'قريبًا',tba:'السعر سيُعلن لاحقًا',p1:'حدود يومية أعلى',p2:'ردود أسرع',p3:'أولوية في الميزات الجديدة',soonb:'قريبًا',fine:'قد يخطئ Orvia. المحادثات محفوظة في هذا المتصفح فقط.',ph:'اكتب رسالة لـ Orvia...',help:'كيف أقدر أساعدك؟',helpsub:'اطلب كودًا، أرفق صورة، أو تحدث فقط.',listen:'استمع',copy:'نسخ',slow:'استنى لحظة قبل الإرسال مرة تانية.',clearq:'حذف كل المحادثات؟',nomic:'الإدخال الصوتي غير مدعوم في هذا المتصفح.',micdeny:'تم رفض إذن الميكروفون.',busy:'Orvia مشغول الآن. جرّب بعد قليل.',limit:'وصل Orvia للحد اليومي. جرّب غدًا.',net:'تعذر الاتصال بـ Orvia. تأكد من الإنترنت.'}};
+const T=k=>(I[S.lang]||I.en)[k]||I.en[k]||k;
+function lang(){document.documentElement.lang=S.lang;document.documentElement.dir=S.lang==='ar'?'rtl':'ltr';document.querySelectorAll('[data-i]').forEach(e=>{if(e.dataset.i==='plans'&&e.id==='planb')return e.textContent='✨ '+T('plans');if(e.dataset.i==='settings'&&e.id==='setb')return e.textContent='⚙ '+T('settings');e.textContent=T(e.dataset.i)});document.querySelectorAll('[data-ph]').forEach(e=>e.placeholder=S.lang==='ar'?T('ph'):'Message Orvia...')}
+function theme(){const t=S.theme==='system'?(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'):S.theme;document.documentElement.dataset.theme=t;$('#tc').content=t==='light'?'#ffffff':'#0f1117'}
+function toast(t){let n=document.createElement('div');n.className='note';n.textContent=t;n.style.cssText='position:fixed;bottom:96px;left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--line);padding:8px 14px;border-radius:12px;z-index:20';document.body.append(n);setTimeout(()=>n.remove(),2200)}
+function friendly(e){const m=String(e.message||e);if(S.prov!=='orvia')return m;if(/^429|daily|limit|Too many/i.test(m))return /Too many/i.test(m)?T('busy'):T('limit');if(/Failed to fetch|NetworkError|Load failed/i.test(m))return T('net');return T('busy')}
+// voice
+const vl=()=>S.vlang==='auto'?(S.lang==='ar'?'ar-EG':'en-US'):S.vlang;
+function speak(t){if(!('speechSynthesis'in window))return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t.replace(/[*#`_]/g,'').slice(0,4000));u.lang=/[\u0600-\u06FF]/.test(t)?(S.vlang.startsWith('ar')?S.vlang:'ar-EG'):(S.vlang==='auto'||S.vlang.startsWith('ar')?'en-US':S.vlang);speechSynthesis.speak(u)}
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;let rec=null;
+$('#mic').onclick=()=>{if(!SR){toast(T('nomic'));return}if(rec){rec.stop();return}rec=new SR();rec.lang=vl();rec.interimResults=true;rec.continuous=false;const base=$('#in').value;rec.onresult=e=>{let t='';for(const r of e.results)t+=r[0].transcript;$('#in').value=(base?base+' ':'')+t;$('#in').dispatchEvent(new Event('input'))};
+rec.onerror=e=>{if(e.error==='not-allowed'||e.error==='service-not-allowed')toast(T('micdeny'))};rec.onend=()=>{rec=null;$('#mic').classList.remove('rec')};$('#mic').classList.add('rec');try{rec.start()}catch(_){rec=null;$('#mic').classList.remove('rec')}};
+// swipe
+let tx=0,ty=0;document.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY},{passive:true});
+document.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;if(Math.abs(dx)<60||Math.abs(dy)>Math.abs(dx)*.7)return;const rtl=S.lang==='ar';const op=rtl?dx<0:dx>0;const edge=rtl?tx>innerWidth-40:tx<40;if(op&&edge&&innerWidth<=760)openS();else if(!op&&$('#side').classList.contains('open'))closeS()},{passive:true});
+matchMedia('(prefers-color-scheme: light)').addEventListener('change',()=>{if(S.theme==='system')theme()});
+theme();lang();
 render();if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js');
 </script></body></html>

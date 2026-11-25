@@ -25,6 +25,10 @@ jobs:
           npx cap init Orvia com.orvia.assistant --web-dir www
           npx cap add android
           npx cap sync android
+      - name: Fix Kotlin duplicate classes
+        working-directory: /tmp/app/android
+        run: |
+          printf '\ndependencies {\n    implementation platform("org.jetbrains.kotlin:kotlin-bom:1.8.22")\n}\n' >> app/build.gradle
       - name: Build debug APK
         working-directory: /tmp/app/android
         run: ./gradlew assembleDebug

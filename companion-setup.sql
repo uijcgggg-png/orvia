@@ -157,3 +157,20 @@ end$$;
 revoke all on function public.device_register(text,text),public.device_status(uuid,text),public.claim_device(text),public.device_poll(uuid,text),public.send_command(uuid,text,jsonb) from public,anon,authenticated;
 grant execute on function public.claim_device(text),public.send_command(uuid,text,jsonb) to authenticated;
 grant execute on function public.device_register(text,text),public.device_status(uuid,text),public.device_poll(uuid,text),public.device_report(uuid,text,uuid,text,text) to anon;
+create or replace function public.claim_device(p_code text)
+returns json language plpgsql security definer set search_path=public,extensions as $$
+declare n text; d uuid; nm text;
+begin
+ if auth.uid() is null then raise exception 'auth'; end if;
+ insert into claim_attempts(user_id) values(auth.uid());
+ delete from claim_attempts where ts<now()-interval '1 hour';
+ if (select count(*) from claim_attempts where user_id=auth.uid() and ts>now()-interval '1 minute')>10 then raise exception 'too many attempts'; end if;
+ n:=upper(regexp_replace(coalesce(p_code,''),'[^0-9A-Za-z]','','g'));
+ if left(n,3)='ORV' then n:=substr(n,4); end if;
+ update devices set user_id=auth.uid(),paired=true,pair_code=null,pair_expires=null,last_seen=now()
+  where pair_code=n and not paired and user_id is null and pair_expires>now() returning id,name into d,nm;
+ if d is null then raise exception 'invalid or expired code'; end if;
+ delete from devices where user_id=auth.uid() and paired and name=nm and id<>d;
+ if (select count(*) from devices where user_id=auth.uid())>5 then raise exception 'too many devices'; end if;
+ return json_build_object('device_id',d,'name',nm);
+end$$;

@@ -231,9 +231,9 @@ document.addEventListener('click',async e=>{const rm=e.target.closest('[data-rm]
 const run=e.target.closest('[data-run]'),no=e.target.closest('[data-no]');if(!run&&!no)return;const card=e.target.closest('.actcard'),msg=card.closest('.row')._m;if(!msg||!msg.act)return;msg.acts=1;
 if(no){saveC();render();return}
 const res=card.querySelector('.ares');card.querySelector('p').remove();res.textContent=T('waitphone');
-try{const dv=DEV.find(d=>d.paired);if(!dv)throw new Error(T('nodev'));const{data:id,error}=await sb.rpc('send_command',{p_device:dv.id,p_action:msg.act.action,p_args:msg.act.args||{}});if(error)throw new Error(error.message);
+try{await loadDevs();const dv=[...DEV].sort((a,b)=>new Date(b.last_seen||0)-new Date(a.last_seen||0))[0];if(!dv)throw new Error(T('nodev'));const age=dv.last_seen?(Date.now()-new Date(dv.last_seen))/1000:1e9;if(age>40)throw new Error('Phone offline (last seen '+(age>1e8?'never':Math.round(age/60)+' min ago')+'). Open Orvia Companion on the phone, make sure it says Connected, then try again.');const{data:id,error}=await sb.rpc('send_command',{p_device:dv.id,p_action:msg.act.action,p_args:msg.act.args||{}});if(error)throw new Error(error.message);
 for(let i=0;i<80;i++){await new Promise(r=>setTimeout(r,1500));const{data}=await sb.from('commands').select('status,result').eq('id',id).single();if(data&&['done','failed','rejected','expired'].includes(data.status)){const r=data.result||'';if(r.startsWith('data:image/'))res.innerHTML='✅<img src="'+r+'">';else res.textContent=(data.status==='done'?'✅ ':data.status==='rejected'?'🚫 ':'⚠️ ')+(r||data.status);msg.ares=res.textContent.slice(0,200);saveC();return}}
-res.textContent='⚠️ timeout'}catch(er){res.textContent='⚠️ '+er.message}});
+res.textContent='⚠️ The phone did not answer. On the phone: open Orvia Companion, check it says Connected and Accessibility ON, and set battery to Unrestricted.'}catch(er){res.textContent='⚠️ '+er.message}});
 setInterval(()=>{if($('#d').open&&$('#p-dv').classList.contains('on'))loadDevs()},5000);
 render();if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js');
 </script></body></html>

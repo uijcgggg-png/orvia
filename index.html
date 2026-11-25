@@ -153,7 +153,7 @@ async function ghCmd(t){let m;try{if(m=t.match(/^\/repo\s+([\w.-]+\/[\w.-]+)/)){
 const rd=root.find(x=>/^readme/i.test(x.name));if(rd){const f=await gh(`/repos/${o}/${n}/contents/${rd.path}`);txt+='\n\n'+rd.name+':\n'+decodeURIComponent(escape(atob(f.content.replace(/\n/g,'')))).slice(0,12000)}return txt}
 if(m=t.match(/^\/file\s+([\w.-]+)\/([\w.-]+)\/(\S+)/)){const f=await gh(`/repos/${m[1]}/${m[2]}/contents/${m[3]}`);if(Array.isArray(f))return 'Directory '+m[3]+':\n'+f.map(x=>x.name).join('\n');return 'File '+m[3]+' from '+m[1]+'/'+m[2]+':\n'+decodeURIComponent(escape(atob(f.content.replace(/\n/g,'')))).slice(0,20000)}}catch(e){return 'Error: '+e.message+(S.gh?'':' (add a GitHub token in Settings for private repos)')}return null}
 let lastSend=0;async function send(){if(busy)return;if(Date.now()-lastSend<2500){toast(T('slow'));return}lastSend=Date.now();const t=$('#in').value.trim();if(!t&&!pend.length)return;
-if(!cur){cur={t:(t||'Image').slice(0,40),m:[]};C.push(cur)}
+if(!cur){cur={t:CODE_RE.test(t)?'Phone link':(t||'Image').slice(0,40),m:[]};C.push(cur)}
 $('#in').value='';$('#in').style.height='auto';
 const cm=t.match(CODE_RE);if(cm){cur.m.push({note:1,c:'…'});render();let msg;try{await claimCode(cm[0]);msg=T('linked')}catch(er){msg=String(er.message||er)}cur.m.pop();cur.m.push({note:1,c:msg});saveC();render();return}
 if(/^\/(repo|file)\s/.test(t)){cur.m.push({r:'user',c:t});const x=await ghCmd(t);cur.m.push({r:'user',c:'[Context from GitHub]\n'+x,hide:true});cur.m.push({note:1,c:x.startsWith('Error')?x:'GitHub context added to this chat.'});saveC();render();return}

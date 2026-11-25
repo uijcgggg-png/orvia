@@ -1,1 +1,61 @@
-
+<!doctype html><html lang="en" dir="ltr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Orvia, your AI assistant</title><meta name="theme-color" content="#0b0d17">
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="logo.svg"><link rel="apple-touch-icon" href="logo.svg">
+<style>
+:root{--bg:#0b0d17;--card:#141829;--line:#252b44;--tx:#e8ebf7;--mut:#8b93b5;--a:#7c5cff;--b:#22d3ee}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(900px 500px at 80% -10%,#1d1b4b55,transparent),var(--bg);color:var(--tx);font:16px/1.5 system-ui,Segoe UI,Roboto,sans-serif}
+a{color:var(--b)}header{display:flex;align-items:center;gap:12px;padding:18px 24px;max-width:1000px;margin:auto}
+header img{width:36px;height:36px}header b{font-size:20px;letter-spacing:.3px}header nav{margin-left:auto;display:flex;gap:18px}
+.hero{max-width:1000px;margin:auto;padding:48px 24px 24px;text-align:center}
+h1{font-size:clamp(34px,6vw,60px);line-height:1.1;margin:0 0 16px;background:linear-gradient(90deg,var(--a),var(--b));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:var(--mut);max-width:620px;margin:0 auto 24px;font-size:18px}
+.btn{display:inline-block;background:linear-gradient(90deg,var(--a),var(--b));color:#06070d;font-weight:700;border:0;border-radius:12px;padding:12px 22px;cursor:pointer;text-decoration:none;font-size:16px}
+.btn.ghost{background:transparent;color:var(--tx);border:1px solid var(--line)}
+.feat{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;max-width:1000px;margin:30px auto;padding:0 24px}
+.feat div{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px}.feat h3{margin:0 0 6px;font-size:17px}.feat p{margin:0;color:var(--mut);font-size:14px}
+#app{max-width:1000px;margin:30px auto 60px;padding:0 24px}
+.chat{background:var(--card);border:1px solid var(--line);border-radius:20px;display:flex;flex-direction:column;height:560px;overflow:hidden}
+.top{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--line)}.top span{color:var(--mut);font-size:13px;margin-left:auto}
+#log{flex:1;overflow:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
+.m{max-width:80%;padding:10px 14px;border-radius:14px;white-space:pre-wrap;word-wrap:break-word}.u{align-self:flex-end;background:#2a2466}.a{align-self:flex-start;background:#1c2138;border:1px solid var(--line)}
+.m img{max-width:220px;border-radius:10px;display:block;margin-bottom:6px}
+pre{background:#0b0d17;padding:10px;border-radius:10px;overflow:auto}
+form{display:flex;gap:8px;padding:12px;border-top:1px solid var(--line)}
+textarea{flex:1;background:#0b0d17;color:var(--tx);border:1px solid var(--line);border-radius:12px;padding:10px;font:inherit;resize:none;height:46px}
+.ic{background:#0b0d17;border:1px solid var(--line);color:var(--tx);border-radius:12px;width:46px;cursor:pointer;font-size:18px}
+dialog{background:var(--card);color:var(--tx);border:1px solid var(--line);border-radius:16px;max-width:460px;width:92%}dialog::backdrop{background:#000a}
+dialog label{display:block;margin:12px 0 4px;color:var(--mut);font-size:14px}dialog input{width:100%;background:#0b0d17;color:var(--tx);border:1px solid var(--line);border-radius:10px;padding:9px;font:inherit}
+.note{color:var(--mut);font-size:13px;margin-top:10px}footer{text-align:center;color:var(--mut);padding:30px;font-size:13px}
+</style></head><body>
+<header><img src="logo.svg" alt=""><b>Orvia</b><nav><a href="#app">Try it</a><a href="#" id="inst">Install</a></nav></header>
+<section class="hero"><h1>An assistant that codes, sees and answers.</h1>
+<p>Ask for code, send a screenshot, get answers. Bring your own AI key, and it stays on your device.</p>
+<a class="btn" href="#app">Start chatting</a> <button class="btn ghost" id="set1">Add AI key</button></section>
+<section class="feat"><div><h3>Code help</h3><p>Write, explain and fix code in any language, with copy-ready blocks.</p></div><div><h3>Image input</h3><p>Attach a picture and ask about it (needs a vision model).</p></div><div><h3>Installable</h3><p>Add to your phone's home screen. Works like an app.</p></div><div><h3>Private</h3><p>Your key and chats are stored only in your browser.</p></div></section>
+<section id="app"><div class="chat"><div class="top"><img src="logo.svg" width="24" alt=""><b>Orvia</b><span id="st">No key set</span><button class="ic" id="set2" title="Settings" type="button">⚙</button></div>
+<div id="log"><div class="m a">Hi, I'm Orvia. Tap ⚙ to add your AI key, then ask me anything.</div></div>
+<form id="f"><button class="ic" type="button" id="att" title="Attach image">+</button><input type="file" id="file" accept="image/*" hidden><textarea id="in" placeholder="Message Orvia..." rows="1"></textarea><button class="btn" type="submit">Send</button></form></div>
+<p class="note">Works with any OpenAI-compatible API (Groq, OpenRouter, Google Gemini's compatible endpoint, and others). Free tiers have limits set by the provider.</p></section>
+<dialog id="d"><form method="dialog"><h3>Settings</h3><label>API base URL</label><input id="base" placeholder="https://api.groq.com/openai/v1"><label>Model</label><input id="model" placeholder="llama-3.3-70b-versatile"><label>API key</label><input id="key" type="password" autocomplete="off"><p class="note">Saved in this browser only. Anyone with access to this device's browser could read it.</p><p><button class="btn" value="ok" id="save">Save</button></p></form></dialog>
+<footer>Orvia, an independent project.</footer>
+<script>
+const $=s=>document.querySelector(s),L=k=>localStorage.getItem(k)||'';let hist=[],img=null;
+function ui(){$('#st').textContent=L('key')?L('model')||'ready':'No key set'}
+['#set1','#set2'].forEach(s=>$(s).onclick=()=>{$('#base').value=L('base');$('#model').value=L('model');$('#key').value=L('key');$('#d').showModal()});
+$('#save').onclick=()=>{['base','model','key'].forEach(k=>localStorage.setItem(k,$('#'+k).value.trim()));ui()};ui();
+$('#att').onclick=()=>$('#file').click();
+$('#file').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{img=r.result;$('#att').textContent='✔'};r.readAsDataURL(f)};
+function esc(t){return t.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}
+function fmt(t){return esc(t).replace(/```(\w*)\n?([\s\S]*?)```/g,'<pre><code>$2</code></pre>')}
+function add(c,h,i){const d=document.createElement('div');d.className='m '+c;d.innerHTML=(i?'<img src="'+i+'">':'')+h;$('#log').append(d);$('#log').scrollTop=1e9;return d}
+$('#f').onsubmit=async e=>{e.preventDefault();const t=$('#in').value.trim();if(!t&&!img)return;
+if(!L('key')||!L('base')||!L('model')){add('a','Open ⚙ and set the API base URL, model and key first.');return}
+const content=img?[{type:'text',text:t||'Describe this image.'},{type:'image_url',image_url:{url:img}}]:t;
+add('u',esc(t),img);hist.push({role:'user',content});$('#in').value='';img=null;$('#att').textContent="+";
+const w=add('a','…');
+try{const r=await fetch(L('base').replace(/\/$/,'')+'/chat/completions',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+L('key')},body:JSON.stringify({model:L('model'),messages:[{role:'system',content:'You are Orvia, a helpful assistant. Be concise and accurate. Use markdown code fences for code.'},...hist]})});
+const j=await r.json();if(!r.ok)throw new Error(j.error&&j.error.message||r.status);const a=j.choices[0].message.content;hist.push({role:'assistant',content:a});w.innerHTML=fmt(a)}catch(x){w.textContent='Error: '+x.message;hist.pop()}};
+$('#in').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();$('#f').requestSubmit()}});
+let dp;addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e});$('#inst').onclick=e=>{e.preventDefault();dp?dp.prompt():alert('On your phone: browser menu, then "Add to Home screen".')};
+if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js');
+</script></body></html>

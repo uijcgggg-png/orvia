@@ -1,61 +1,132 @@
-<!doctype html><html lang="en" dir="ltr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Orvia, your AI assistant</title><meta name="theme-color" content="#0b0d17">
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Orvia</title><meta name="theme-color" content="#0f1117">
 <link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="logo.svg"><link rel="apple-touch-icon" href="logo.svg">
 <style>
-:root{--bg:#0b0d17;--card:#141829;--line:#252b44;--tx:#e8ebf7;--mut:#8b93b5;--a:#7c5cff;--b:#22d3ee}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(900px 500px at 80% -10%,#1d1b4b55,transparent),var(--bg);color:var(--tx);font:16px/1.5 system-ui,Segoe UI,Roboto,sans-serif}
-a{color:var(--b)}header{display:flex;align-items:center;gap:12px;padding:18px 24px;max-width:1000px;margin:auto}
-header img{width:36px;height:36px}header b{font-size:20px;letter-spacing:.3px}header nav{margin-left:auto;display:flex;gap:18px}
-.hero{max-width:1000px;margin:auto;padding:48px 24px 24px;text-align:center}
-h1{font-size:clamp(34px,6vw,60px);line-height:1.1;margin:0 0 16px;background:linear-gradient(90deg,var(--a),var(--b));-webkit-background-clip:text;background-clip:text;color:transparent}
-.hero p{color:var(--mut);max-width:620px;margin:0 auto 24px;font-size:18px}
-.btn{display:inline-block;background:linear-gradient(90deg,var(--a),var(--b));color:#06070d;font-weight:700;border:0;border-radius:12px;padding:12px 22px;cursor:pointer;text-decoration:none;font-size:16px}
-.btn.ghost{background:transparent;color:var(--tx);border:1px solid var(--line)}
-.feat{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;max-width:1000px;margin:30px auto;padding:0 24px}
-.feat div{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px}.feat h3{margin:0 0 6px;font-size:17px}.feat p{margin:0;color:var(--mut);font-size:14px}
-#app{max-width:1000px;margin:30px auto 60px;padding:0 24px}
-.chat{background:var(--card);border:1px solid var(--line);border-radius:20px;display:flex;flex-direction:column;height:560px;overflow:hidden}
-.top{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--line)}.top span{color:var(--mut);font-size:13px;margin-left:auto}
-#log{flex:1;overflow:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
-.m{max-width:80%;padding:10px 14px;border-radius:14px;white-space:pre-wrap;word-wrap:break-word}.u{align-self:flex-end;background:#2a2466}.a{align-self:flex-start;background:#1c2138;border:1px solid var(--line)}
-.m img{max-width:220px;border-radius:10px;display:block;margin-bottom:6px}
-pre{background:#0b0d17;padding:10px;border-radius:10px;overflow:auto}
-form{display:flex;gap:8px;padding:12px;border-top:1px solid var(--line)}
-textarea{flex:1;background:#0b0d17;color:var(--tx);border:1px solid var(--line);border-radius:12px;padding:10px;font:inherit;resize:none;height:46px}
-.ic{background:#0b0d17;border:1px solid var(--line);color:var(--tx);border-radius:12px;width:46px;cursor:pointer;font-size:18px}
-dialog{background:var(--card);color:var(--tx);border:1px solid var(--line);border-radius:16px;max-width:460px;width:92%}dialog::backdrop{background:#000a}
-dialog label{display:block;margin:12px 0 4px;color:var(--mut);font-size:14px}dialog input{width:100%;background:#0b0d17;color:var(--tx);border:1px solid var(--line);border-radius:10px;padding:9px;font:inherit}
-.note{color:var(--mut);font-size:13px;margin-top:10px}footer{text-align:center;color:var(--mut);padding:30px;font-size:13px}
+:root{--bg:#0f1117;--side:#0b0d12;--card:#171a23;--line:#262a37;--tx:#e9ebf2;--mut:#8a90a6;--a:#7c5cff;--b:#22d3ee;--user:#232842}
+*{box-sizing:border-box}html,body{height:100%}body{margin:0;background:var(--bg);color:var(--tx);font:15.5px/1.6 system-ui,-apple-system,Segoe UI,Roboto,"Noto Sans Arabic",sans-serif;display:flex;overflow:hidden}
+button{font:inherit;color:inherit;cursor:pointer}
+#side{width:272px;background:var(--side);border-right:1px solid var(--line);display:flex;flex-direction:column;flex-shrink:0;transition:transform .2s}
+.brand{display:flex;align-items:center;gap:10px;padding:16px 16px 8px;font-weight:700;font-size:18px}.brand img{width:28px;height:28px}
+.nb{margin:8px 12px;padding:10px 12px;border:1px solid var(--line);background:transparent;border-radius:12px;text-align:left;display:flex;gap:8px;align-items:center}.nb:hover,.ci:hover{background:#171a23}
+#list{flex:1;overflow:auto;padding:4px 8px}.ci{display:flex;align-items:center;gap:6px;padding:9px 10px;border-radius:10px;cursor:pointer;color:var(--mut)}.ci.on{background:#1c2030;color:var(--tx)}
+.ci span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ci button{background:none;border:0;color:var(--mut);opacity:0;padding:0 4px}.ci:hover button{opacity:1}
+.sf{padding:10px 12px;border-top:1px solid var(--line)}.sf button{width:100%;text-align:left;background:none;border:0;padding:9px 10px;border-radius:10px;color:var(--mut)}.sf button:hover{background:#171a23;color:var(--tx)}
+#main{flex:1;display:flex;flex-direction:column;min-width:0;height:100%}
+#top{display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--line)}
+#menu{display:none;background:none;border:0;font-size:22px}#model{margin-left:auto;color:var(--mut);font-size:13px;background:var(--card);border:1px solid var(--line);padding:5px 10px;border-radius:999px}
+#msgs{flex:1;overflow:auto;padding:20px 0}.w{max-width:780px;margin:0 auto;padding:0 18px}
+.row{display:flex;margin:14px 0}.row.u{justify-content:flex-end}
+.bub{max-width:100%;word-wrap:break-word;overflow-wrap:anywhere}.u .bub{background:var(--user);padding:10px 15px;border-radius:18px;max-width:85%;white-space:pre-wrap}
+.a .bub{width:100%}.a .av{width:28px;height:28px;border-radius:50%;flex-shrink:0;margin-right:12px;margin-top:2px}
+.bub img.at{max-width:240px;max-height:240px;border-radius:12px;display:block;margin:0 0 8px}
+.bub p{margin:.5em 0}.bub h1,.bub h2,.bub h3{margin:.9em 0 .3em;line-height:1.3}.bub h1{font-size:1.4em}.bub h2{font-size:1.2em}.bub h3{font-size:1.05em}
+.bub ul,.bub ol{padding-inline-start:1.4em;margin:.4em 0}.bub code{background:#222637;padding:.1em .35em;border-radius:6px;font:13.5px ui-monospace,Menlo,Consolas,monospace}
+.cb{background:#0a0c12;border:1px solid var(--line);border-radius:12px;margin:.7em 0;overflow:hidden;direction:ltr;text-align:left}
+.ch{display:flex;justify-content:space-between;align-items:center;padding:6px 12px;background:#141722;color:var(--mut);font-size:12.5px}
+.ch button{background:none;border:0;color:var(--mut);padding:2px 6px;border-radius:6px}.ch button:hover{color:var(--tx);background:#222637}
+.cb pre{margin:0;padding:12px;overflow:auto}.cb code{background:none;padding:0;font-size:13.5px;white-space:pre}
+.bub a{color:var(--b)}.note{color:var(--mut);font-size:13px;text-align:center;margin:12px 0}
+.err{color:#ff8a8a}.dots::after{content:"●";animation:p 1s infinite;color:var(--mut)}@keyframes p{50%{opacity:.2}}
+#empty{text-align:center;margin-top:12vh}#empty img{width:64px}#empty h1{font-size:30px;margin:12px 0 6px;background:linear-gradient(90deg,var(--a),var(--b));-webkit-background-clip:text;background-clip:text;color:transparent}
+#empty p{color:var(--mut)}.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:18px}.chips button{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:8px 14px;color:var(--tx)}.chips button:hover{border-color:var(--a)}
+#comp{padding:8px 16px 16px}.box{max-width:780px;margin:0 auto;background:var(--card);border:1px solid var(--line);border-radius:22px;padding:8px 10px;display:flex;flex-direction:column;gap:6px}
+#prev{display:none;gap:8px;padding:4px 4px 0}#prev div{position:relative}#prev img{height:62px;border-radius:10px}#prev b{position:absolute;top:-6px;right:-6px;background:#000c;border-radius:50%;width:20px;height:20px;text-align:center;line-height:20px;cursor:pointer;font-size:13px}
+.in{display:flex;align-items:flex-end;gap:8px}textarea{flex:1;background:none;border:0;outline:0;color:var(--tx);font:inherit;resize:none;max-height:200px;padding:8px 4px}
+.ib{width:38px;height:38px;border-radius:50%;border:0;background:transparent;font-size:20px;color:var(--mut)}.ib:hover{background:#222637;color:var(--tx)}
+#send{background:linear-gradient(135deg,var(--a),var(--b));color:#06070d;font-weight:700}#send:disabled{opacity:.4}
+.fine{text-align:center;color:var(--mut);font-size:12px;margin-top:8px}
+dialog{background:var(--card);color:var(--tx);border:1px solid var(--line);border-radius:18px;width:min(480px,94vw);padding:20px}dialog::backdrop{background:#000b}
+dialog h3{margin:0 0 6px}dialog label{display:block;margin:12px 0 4px;color:var(--mut);font-size:13px}
+dialog input,dialog select,dialog textarea{width:100%;background:#0f1117;color:var(--tx);border:1px solid var(--line);border-radius:10px;padding:9px;font:inherit;max-height:none}
+.btn{background:linear-gradient(90deg,var(--a),var(--b));color:#06070d;border:0;border-radius:10px;padding:9px 18px;font-weight:700}.btn.g{background:transparent;color:var(--tx);border:1px solid var(--line)}
+.hint{color:var(--mut);font-size:12.5px;margin:6px 0 0}
+@media(max-width:760px){#side{position:fixed;z-index:5;height:100%;transform:translateX(-100%)}#side.open{transform:none}#menu{display:block}.u .bub{max-width:92%}}
 </style></head><body>
-<header><img src="logo.svg" alt=""><b>Orvia</b><nav><a href="#app">Try it</a><a href="#" id="inst">Install</a></nav></header>
-<section class="hero"><h1>An assistant that codes, sees and answers.</h1>
-<p>Ask for code, send a screenshot, get answers. Bring your own AI key, and it stays on your device.</p>
-<a class="btn" href="#app">Start chatting</a> <button class="btn ghost" id="set1">Add AI key</button></section>
-<section class="feat"><div><h3>Code help</h3><p>Write, explain and fix code in any language, with copy-ready blocks.</p></div><div><h3>Image input</h3><p>Attach a picture and ask about it (needs a vision model).</p></div><div><h3>Installable</h3><p>Add to your phone's home screen. Works like an app.</p></div><div><h3>Private</h3><p>Your key and chats are stored only in your browser.</p></div></section>
-<section id="app"><div class="chat"><div class="top"><img src="logo.svg" width="24" alt=""><b>Orvia</b><span id="st">No key set</span><button class="ic" id="set2" title="Settings" type="button">⚙</button></div>
-<div id="log"><div class="m a">Hi, I'm Orvia. Tap ⚙ to add your AI key, then ask me anything.</div></div>
-<form id="f"><button class="ic" type="button" id="att" title="Attach image">+</button><input type="file" id="file" accept="image/*" hidden><textarea id="in" placeholder="Message Orvia..." rows="1"></textarea><button class="btn" type="submit">Send</button></form></div>
-<p class="note">Works with any OpenAI-compatible API (Groq, OpenRouter, Google Gemini's compatible endpoint, and others). Free tiers have limits set by the provider.</p></section>
-<dialog id="d"><form method="dialog"><h3>Settings</h3><label>API base URL</label><input id="base" placeholder="https://api.groq.com/openai/v1"><label>Model</label><input id="model" placeholder="llama-3.3-70b-versatile"><label>API key</label><input id="key" type="password" autocomplete="off"><p class="note">Saved in this browser only. Anyone with access to this device's browser could read it.</p><p><button class="btn" value="ok" id="save">Save</button></p></form></dialog>
-<footer>Orvia, an independent project.</footer>
+<aside id="side"><div class="brand"><img src="logo.svg" alt="">Orvia</div>
+<button class="nb" id="new">＋ New chat</button><div id="list"></div>
+<div class="sf"><button id="setb">⚙ Settings</button></div></aside>
+<div id="main"><div id="top"><button id="menu" aria-label="Menu">☰</button><b>Orvia</b><span id="model"></span></div>
+<div id="msgs"><div class="w" id="chat"></div></div>
+<div id="comp"><div class="box"><div id="prev"></div><div class="in">
+<button class="ib" id="att" title="Attach image"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.4 11.1l-9.2 9.2a6 6 0 0 1-8.5-8.5l9.2-9.2a4 4 0 0 1 5.7 5.7l-9.2 9.2a2 2 0 0 1-2.8-2.8l8.5-8.5"/></svg></button><input type="file" id="file" accept="image/*" multiple hidden>
+<textarea id="in" rows="1" dir="auto" placeholder="Message Orvia..."></textarea><button class="ib" id="send" title="Send">➤</button></div></div>
+<div class="fine">Orvia can make mistakes. Chats and keys stay in this browser.</div></div></div>
+<dialog id="d"><h3>Settings</h3><p class="hint">Bring your own key. It is saved only in this browser, never sent anywhere except the provider you pick.</p>
+<label>Provider</label><select id="prov"><option value="groq">Groq (free tier)</option><option value="gemini">Google Gemini (free tier)</option><option value="openrouter">OpenRouter</option><option value="custom">Custom (OpenAI-compatible)</option></select>
+<label>Model</label><input id="model_i" list="ml" autocomplete="off"><datalist id="ml"></datalist>
+<label>API key</label><input id="key" type="password" autocomplete="off" placeholder="paste your key">
+<label>API base URL</label><input id="base" autocomplete="off">
+<label>System prompt (optional)</label><textarea id="sys" rows="2"></textarea>
+<label>GitHub token (optional)</label><input id="gh" type="password" autocomplete="off" placeholder="github_pat_... (read-only recommended)">
+<p class="hint">With a token, type <code>/repo owner/name</code> or <code>/file owner/name/path</code> in the chat to bring repo files into the conversation. Use a fine-grained token with read-only access.</p>
+<p style="display:flex;gap:8px;justify-content:flex-end;margin:16px 0 0"><button class="btn g" id="clr" type="button">Clear all chats</button><button class="btn" id="save" type="button">Save</button></p></dialog>
 <script>
-const $=s=>document.querySelector(s),L=k=>localStorage.getItem(k)||'';let hist=[],img=null;
-function ui(){$('#st').textContent=L('key')?L('model')||'ready':'No key set'}
-['#set1','#set2'].forEach(s=>$(s).onclick=()=>{$('#base').value=L('base');$('#model').value=L('model');$('#key').value=L('key');$('#d').showModal()});
-$('#save').onclick=()=>{['base','model','key'].forEach(k=>localStorage.setItem(k,$('#'+k).value.trim()));ui()};ui();
+const P={groq:{base:'https://api.groq.com/openai/v1',models:['qwen/qwen3.8-27b','openai/gpt-oss-120b','openai/gpt-oss-20b']},
+gemini:{base:'https://generativelanguage.googleapis.com/v1beta/openai',models:['gemini-3.8-flash','gemini-3.6-flash','gemini-3.5-flash-lite']},
+openrouter:{base:'https://openrouter.ai/api/v1',models:[]},custom:{base:'',models:[]}};
+const $=s=>document.querySelector(s),ls=localStorage;
+let S=JSON.parse(ls.getItem('orvia_s')||'{}');S={prov:'groq',model:'qwen/qwen3.8-27b',key:'',base:P.groq.base,sys:'',gh:'',...S};
+let C=JSON.parse(ls.getItem('orvia_c')||'[]'),cur=null,pend=[],busy=false;
+const saveS=()=>ls.setItem('orvia_s',JSON.stringify(S));
+function saveC(){try{ls.setItem('orvia_c',JSON.stringify(C))}catch(e){C.forEach(c=>c.m.forEach(m=>{if(Array.isArray(m.imgs))m.imgs=[]}));try{ls.setItem('orvia_c',JSON.stringify(C))}catch(_){}}}
+const esc=t=>t.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function md(t){const blocks=[];t=t.replace(/```(\w*)\n?([\s\S]*?)(```|$)/g,(_,l,c)=>{blocks.push([l,c.replace(/\n$/,'')]);return '\u0000'+(blocks.length-1)+'\u0000'});
+let h=esc(t);
+h=h.replace(/`([^`\n]+)`/g,'<code>$1</code>').replace(/\*\*([^*\n]+)\*\*/g,'<b>$1</b>').replace(/(^|[\s(])\*([^*\n]+)\*/g,'$1<i>$2</i>')
+.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,'<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+const lines=h.split('\n'),out=[];let list=null;
+const close=()=>{if(list){out.push('</'+list+'>');list=null}};
+for(const ln of lines){let m;
+if(m=ln.match(/^(#{1,3})\s+(.*)/)){close();out.push('<h'+m[1].length+'>'+m[2]+'</h'+m[1].length+'>')}
+else if(m=ln.match(/^\s*[-*]\s+(.*)/)){if(list!=='ul'){close();out.push('<ul>');list='ul'}out.push('<li>'+m[1]+'</li>')}
+else if(m=ln.match(/^\s*\d+[.)]\s+(.*)/)){if(list!=='ol'){close();out.push('<ol>');list='ol'}out.push('<li>'+m[1]+'</li>')}
+else if(!ln.trim()){close()}else if(/^\u0000\d+\u0000$/.test(ln.trim())){close();out.push(ln.trim())}else{close();out.push('<p>'+ln+'</p>')}}
+close();return out.join('').replace(/\u0000(\d+)\u0000/g,(_,i)=>{const[l,c]=blocks[i];return '<div class="cb"><div class="ch"><span>'+(esc(l)||'code')+'</span><button data-copy>Copy</button></div><pre><code>'+esc(c)+'</code></pre></div>'})}
+function cmodel(){return S.model||'no model'}
+function renderList(){const l=$('#list');l.innerHTML='';C.slice().reverse().forEach(c=>{const d=document.createElement('div');d.className='ci'+(c===cur?' on':'');d.innerHTML='<span dir="auto">'+esc(c.t)+'</span><button title="Delete">✕</button>';
+d.onclick=()=>{cur=c;render();$('#side').classList.remove('open')};d.querySelector('button').onclick=e=>{e.stopPropagation();C=C.filter(x=>x!==c);if(cur===c)cur=null;saveC();render()};l.append(d)})}
+function bubble(m){const r=document.createElement('div');r.className='row '+(m.r==='user'?'u':'a');
+const imgs=(m.imgs||[]).map(i=>'<img class="at" src="'+i+'">').join('');
+r.innerHTML=(m.r==='user'?'':'<img class="av" src="logo.svg" alt="">')+'<div class="bub" dir="auto">'+imgs+(m.r==='user'?esc(m.c):md(m.c))+'</div>';return r}
+function render(){renderList();$('#model').textContent=cmodel();const ch=$('#chat');ch.innerHTML='';
+if(!cur||!cur.m.length){ch.innerHTML='<div id="empty"><img src="logo.svg" alt=""><h1>How can I help?</h1><p>Ask for code, attach an image, or just chat.</p><div class="chips"><button>Explain how async/await works</button><button>Write a Python script to rename files</button><button>Help me debug my code</button></div></div>';
+ch.querySelectorAll('.chips button').forEach(b=>b.onclick=()=>{$('#in').value=b.textContent;send()});return}
+cur.m.forEach(m=>{if(m.note){const n=document.createElement('div');n.className='note';n.textContent=m.c;ch.append(n)}else ch.append(bubble(m))});$('#msgs').scrollTop=1e9}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-copy]');if(b){navigator.clipboard.writeText(b.closest('.cb').querySelector('code').textContent);b.textContent='Copied';setTimeout(()=>b.textContent='Copy',1200)}});
+function shrink(f){return new Promise(res=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,1280/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',.82))};im.src=r.result};r.readAsDataURL(f)})}
+function prev(){const p=$('#prev');p.style.display=pend.length?'flex':'none';p.innerHTML='';pend.forEach((s,i)=>{const d=document.createElement('div');d.innerHTML='<img src="'+s+'"><b>×</b>';d.querySelector('b').onclick=()=>{pend.splice(i,1);prev()};p.append(d)})}
 $('#att').onclick=()=>$('#file').click();
-$('#file').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{img=r.result;$('#att').textContent='✔'};r.readAsDataURL(f)};
-function esc(t){return t.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}
-function fmt(t){return esc(t).replace(/```(\w*)\n?([\s\S]*?)```/g,'<pre><code>$2</code></pre>')}
-function add(c,h,i){const d=document.createElement('div');d.className='m '+c;d.innerHTML=(i?'<img src="'+i+'">':'')+h;$('#log').append(d);$('#log').scrollTop=1e9;return d}
-$('#f').onsubmit=async e=>{e.preventDefault();const t=$('#in').value.trim();if(!t&&!img)return;
-if(!L('key')||!L('base')||!L('model')){add('a','Open ⚙ and set the API base URL, model and key first.');return}
-const content=img?[{type:'text',text:t||'Describe this image.'},{type:'image_url',image_url:{url:img}}]:t;
-add('u',esc(t),img);hist.push({role:'user',content});$('#in').value='';img=null;$('#att').textContent="+";
-const w=add('a','…');
-try{const r=await fetch(L('base').replace(/\/$/,'')+'/chat/completions',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+L('key')},body:JSON.stringify({model:L('model'),messages:[{role:'system',content:'You are Orvia, a helpful assistant. Be concise and accurate. Use markdown code fences for code.'},...hist]})});
-const j=await r.json();if(!r.ok)throw new Error(j.error&&j.error.message||r.status);const a=j.choices[0].message.content;hist.push({role:'assistant',content:a});w.innerHTML=fmt(a)}catch(x){w.textContent='Error: '+x.message;hist.pop()}};
-$('#in').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();$('#f').requestSubmit()}});
-let dp;addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e});$('#inst').onclick=e=>{e.preventDefault();dp?dp.prompt():alert('On your phone: browser menu, then "Add to Home screen".')};
-if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js');
+$('#file').onchange=async e=>{for(const f of e.target.files)pend.push(await shrink(f));e.target.value='';prev()};
+$('#in').addEventListener('paste',async e=>{for(const it of e.clipboardData.items)if(it.type.startsWith('image/')){pend.push(await shrink(it.getAsFile()));prev()}});
+$('#in').addEventListener('input',e=>{e.target.style.height='auto';e.target.style.height=Math.min(200,e.target.scrollHeight)+'px'});
+$('#in').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&!/Mobi|Android/i.test(navigator.userAgent)){e.preventDefault();send()}});
+$('#send').onclick=send;$('#new').onclick=()=>{cur=null;render();$('#side').classList.remove('open')};$('#menu').onclick=()=>$('#side').classList.toggle('open');
+async function gh(path){const h={Accept:'application/vnd.github+json'};if(S.gh)h.Authorization='Bearer '+S.gh;const r=await fetch('https://api.github.com'+path,{headers:h});if(!r.ok)throw new Error('GitHub '+r.status);return r.json()}
+async function ghCmd(t){let m;try{if(m=t.match(/^\/repo\s+([\w.-]+\/[\w.-]+)/)){const[o,n]=m[1].split('/');const root=await gh(`/repos/${o}/${n}/contents`);let txt=`GitHub repo ${m[1]}, top-level files:\n`+root.map(x=>(x.type==='dir'?'[dir] ':'')+x.name).join('\n');
+const rd=root.find(x=>/^readme/i.test(x.name));if(rd){const f=await gh(`/repos/${o}/${n}/contents/${rd.path}`);txt+='\n\n'+rd.name+':\n'+decodeURIComponent(escape(atob(f.content.replace(/\n/g,'')))).slice(0,12000)}return txt}
+if(m=t.match(/^\/file\s+([\w.-]+)\/([\w.-]+)\/(\S+)/)){const f=await gh(`/repos/${m[1]}/${m[2]}/contents/${m[3]}`);if(Array.isArray(f))return 'Directory '+m[3]+':\n'+f.map(x=>x.name).join('\n');return 'File '+m[3]+' from '+m[1]+'/'+m[2]+':\n'+decodeURIComponent(escape(atob(f.content.replace(/\n/g,'')))).slice(0,20000)}}catch(e){return 'Error: '+e.message+(S.gh?'':' (add a GitHub token in Settings for private repos)')}return null}
+async function send(){if(busy)return;const t=$('#in').value.trim();if(!t&&!pend.length)return;
+if(!cur){cur={t:(t||'Image').slice(0,40),m:[]};C.push(cur)}
+$('#in').value='';$('#in').style.height='auto';
+if(/^\/(repo|file)\s/.test(t)){cur.m.push({r:'user',c:t});const x=await ghCmd(t);cur.m.push({r:'user',c:'[Context from GitHub]\n'+x,hide:true});cur.m.push({note:1,c:x.startsWith('Error')?x:'GitHub context added to this chat.'});saveC();render();return}
+if(!S.key||!S.base||!S.model){$('#d').showModal();return}
+const imgs=pend;pend=[];prev();cur.m.push({r:'user',c:t,imgs});const ai={r:'assistant',c:''};cur.m.push(ai);saveC();render();
+const el=$('#chat').lastElementChild.querySelector('.bub');el.innerHTML='<span class="dots"></span>';busy=true;$('#send').disabled=true;
+const msgs=[];if(S.sys)msgs.push({role:'system',content:S.sys});
+cur.m.filter(m=>m!==ai&&!m.note).forEach(m=>{if(m.imgs&&m.imgs.length)msgs.push({role:'user',content:[{type:'text',text:m.c||'Describe this image.'},...m.imgs.map(u=>({type:'image_url',image_url:{url:u}}))]});else msgs.push({role:m.r==='user'?'user':'assistant',content:m.c})});
+try{const r=await fetch(S.base.replace(/\/$/,'')+'/chat/completions',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+S.key},body:JSON.stringify({model:S.model,messages:msgs,stream:true})});
+if(!r.ok){let e='';try{const j=await r.json();e=j.error&&j.error.message||JSON.stringify(j)}catch(_){e=r.statusText}throw new Error(r.status+' '+e)}
+const rd=r.body.getReader(),dec=new TextDecoder();let buf='';
+while(true){const{done,value}=await rd.read();if(done)break;buf+=dec.decode(value,{stream:true});const parts=buf.split('\n');buf=parts.pop();
+for(const p of parts){if(!p.startsWith('data:'))continue;const d=p.slice(5).trim();if(d==='[DONE]')continue;try{const j=JSON.parse(d);const dl=j.choices&&j.choices[0]&&j.choices[0].delta&&j.choices[0].delta.content;if(dl){ai.c+=dl;el.innerHTML=md(ai.c);$('#msgs').scrollTop=1e9}}catch(_){}}}
+if(!ai.c)el.textContent='(empty reply)'}catch(e){ai.c='';el.innerHTML='<span class="err">'+esc(String(e.message||e))+'</span><div class="note" style="text-align:left">Check the key, model name and provider in Settings.</div>';cur.m=cur.m.filter(m=>m!==ai)}
+busy=false;$('#send').disabled=false;saveC();renderList()}
+function fillSet(){$('#prov').value=S.prov;$('#model_i').value=S.model;$('#key').value=S.key;$('#base').value=S.base;$('#sys').value=S.sys;$('#gh').value=S.gh;ml()}
+function ml(){$('#ml').innerHTML=(P[$('#prov').value].models).map(m=>'<option value="'+m+'">').join('')}
+$('#prov').onchange=()=>{const p=$('#prov').value;$('#base').value=P[p].base;$('#model_i').value=P[p].models[0]||'';ml()};
+$('#setb').onclick=()=>{fillSet();$('#d').showModal()};$('#model').onclick=()=>{fillSet();$('#d').showModal()};
+$('#save').onclick=()=>{S={prov:$('#prov').value,model:$('#model_i').value.trim(),key:$('#key').value.trim(),base:$('#base').value.trim(),sys:$('#sys').value,gh:$('#gh').value.trim()};saveS();$('#d').close();$('#model').textContent=cmodel()};
+$('#clr').onclick=()=>{if(confirm('Delete all chats?')){C=[];cur=null;saveC();render()}};
+render();if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js');
 </script></body></html>

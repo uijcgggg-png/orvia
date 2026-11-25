@@ -53,7 +53,7 @@ dialog input,dialog select,dialog textarea{width:100%;background:var(--inp);colo
 .plan h4{margin:0 0 2px;font-size:18px}.plan .pr{color:var(--mut);font-size:13px;margin-bottom:8px}.plan ul{padding-inline-start:18px;margin:8px 0;font-size:14px}.plan .btn{width:100%;margin-top:6px}.plan .btn:disabled{opacity:.5;cursor:not-allowed}
 .tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:999px;background:var(--a);color:#fff;margin-inline-start:6px;vertical-align:middle}
 dialog{max-height:92vh;overflow:auto}
-@media(max-width:760px){#side{position:fixed;z-index:5;height:100%;transform:translateX(-100%);box-shadow:4px 0 24px #0008;width:min(300px,84vw)}#side.open{transform:none}#side.open~#bd,body.so #bd{display:block}#menu{display:block;width:40px;height:40px}#sclose{display:block}.u .bub{max-width:92%}.plans{grid-template-columns:1fr}.ci button{opacity:1}}
+@media(max-width:760px){#side{position:fixed;left:0;right:auto;top:0;z-index:5;height:100%;transform:translateX(-100%);box-shadow:4px 0 24px #0008;width:min(300px,84vw)}#side.open{transform:none}#side.open~#bd,body.so #bd{display:block}#menu{display:block;width:40px;height:40px}#sclose{display:block}.u .bub{max-width:92%}.plans{grid-template-columns:1fr}.ci button{opacity:1}}
 </style></head><body>
 <aside id="side"><div class="brand"><img src="logo.svg" alt="">Orvia<button id="sclose" aria-label="Close menu">✕</button></div>
 <button class="nb" id="new">＋ New chat</button><div id="list"></div>
@@ -174,7 +174,7 @@ $('#mic').onclick=()=>{if(!SR){toast(T('nomic'));return}if(rec){rec.stop();retur
 rec.onerror=e=>{if(e.error==='not-allowed'||e.error==='service-not-allowed')toast(T('micdeny'))};rec.onend=()=>{rec=null;$('#mic').classList.remove('rec')};$('#mic').classList.add('rec');try{rec.start()}catch(_){rec=null;$('#mic').classList.remove('rec')}};
 // swipe
 let tx=0,ty=0;document.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY},{passive:true});
-document.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;if(Math.abs(dx)<60||Math.abs(dy)>Math.abs(dx)*.7)return;const rtl=S.lang==='ar';const op=rtl?dx<0:dx>0;const edge=rtl?tx>innerWidth-40:tx<40;if(op&&edge&&innerWidth<=760)openS();else if(!op&&$('#side').classList.contains('open'))closeS()},{passive:true});
+document.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;if(Math.abs(dx)<60||Math.abs(dy)>Math.abs(dx)*.7)return;const op=dx>0;const edge=tx<40;if(op&&edge&&innerWidth<=760)openS();else if(!op&&$('#side').classList.contains('open'))closeS()},{passive:true});
 matchMedia('(prefers-color-scheme: light)').addEventListener('change',()=>{if(S.theme==='system')theme()});
 theme();lang();
 render();if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js');

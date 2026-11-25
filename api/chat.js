@@ -6,12 +6,17 @@ const IDENTITY = 'You are Orvia, an AI assistant. Orvia is your only name. You d
 const MAX_TOKENS = 1500;
 const PER_IP_PER_MIN = 8;
 const hits = new Map();
+const SB = 'https://wdiukcpegqeifllhauqf.supabase.co';
+const SBKEY = 'sb_publishable_-3O5QNXd4bTtFu2aOUIhkA_Ef3RVNiz';
+const COOLDOWN_MS = 3000, PER_USER_PER_MIN = 6, PER_USER_PER_DAY = 40;
+const busy = new Map();
+const jerr = (h, status, code, message) => new Response(JSON.stringify({ error: { code, message } }), { status, headers: { ...h, 'Content-Type': 'application/json' } });
 
 function cors(origin) {
   return {
     'Access-Control-Allow-Origin': origin,
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
     'Vary': 'Origin'
   };
 }
@@ -33,6 +38,29 @@ export default async function handler(req) {
   arr.push(now); hits.set(ip, arr);
   if (hits.size > 5000) hits.clear();
 
+  const jwt = (req.headers.get('authorization') || '').replace(/^Bearer\s+/i, '');
+  if (!jwt) return jerr(h, 401, 'AUTH', 'Sign in required');
+  const sbh = { apikey: SBKEY, Authorization: 'Bearer ' + jwt };
+  let uid;
+  try {
+    const ur = await fetch(SB + '/auth/v1/user', { headers: sbh });
+    if (!ur.ok) return jerr(h, 401, 'AUTH', 'Sign in required');
+    uid = (await ur.json()).id;
+  } catch { return jerr(h, 503, 'AUTHDOWN', 'Auth unavailable'); }
+  if (!uid) return jerr(h, 401, 'AUTH', 'Sign in required');
+  if (busy.has(uid) && now - busy.get(uid) < 60000) return jerr(h, 429, 'COOLDOWN', 'One message at a time');
+  try {
+    const since = new Date(now - 86400000).toISOString();
+    const ur = await fetch(SB + '/rest/v1/usage?select=created_at&created_at=gte.' + since + '&order=created_at.desc&limit=100', { headers: sbh });
+    if (ur.ok) {
+      const rows = (await ur.json()).map(r => new Date(r.created_at).getTime());
+      if (rows.length >= PER_USER_PER_DAY) return jerr(h, 429, 'DAILYCAP', 'Daily limit reached');
+      if (rows.length && now - rows[0] < COOLDOWN_MS) return jerr(h, 429, 'COOLDOWN', 'Slow down');
+      if (rows.filter(t => now - t < 60000).length >= PER_USER_PER_MIN) return jerr(h, 429, 'COOLDOWN', 'Slow down');
+    }
+    await fetch(SB + '/rest/v1/usage', { method: 'POST', headers: { ...sbh, 'Content-Type': 'application/json', Prefer: 'return=minimal' }, body: '{}' });
+  } catch {}
+  busy.set(uid, now); if (busy.size > 5000) busy.clear();
   let body;
   try { body = await req.json(); } catch { return new Response('Bad JSON', { status: 400, headers: h }); }
   if (!Array.isArray(body.messages) || JSON.stringify(body.messages).length > 400000) {
@@ -56,7 +84,9 @@ export default async function handler(req) {
     },
     body: JSON.stringify(payload)
   });
-  return new Response(up.body, {
+  const rb = up.body ? up.body.pipeThrough(new TransformStream({ flush() { busy.delete(uid); } })) : null;
+  if (!rb) busy.delete(uid);
+  return new Response(rb, {
     status: up.status,
     headers: { ...h, 'Content-Type': up.headers.get('content-type') || 'application/json', 'Cache-Control': 'no-store' }
   });

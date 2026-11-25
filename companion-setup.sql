@@ -157,20 +157,35 @@ end$$;
 revoke all on function public.device_register(text,text),public.device_status(uuid,text),public.claim_device(text),public.device_poll(uuid,text),public.send_command(uuid,text,jsonb) from public,anon,authenticated;
 grant execute on function public.claim_device(text),public.send_command(uuid,text,jsonb) to authenticated;
 grant execute on function public.device_register(text,text),public.device_status(uuid,text),public.device_poll(uuid,text),public.device_report(uuid,text,uuid,text,text) to anon;
-create or replace function public.claim_device(p_code text)
+create table if not exists public.agent_usage(user_id uuid not null, created_at timestamptz not null default now());
+create index if not exists agent_usage_u on public.agent_usage(user_id, created_at);
+alter table public.agent_usage enable row level security;
+revoke all on public.agent_usage from anon, authenticated;
+
+create or replace function public.agent_gate(p_device uuid, p_secret text)
 returns json language plpgsql security definer set search_path=public,extensions as $$
-declare n text; d uuid; nm text;
+declare u uuid;
+begin
+ select user_id into u from devices where id=p_device and paired and secret_hash=encode(digest(p_secret,'sha256'),'hex');
+ if u is null then raise exception 'unauthorized'; end if;
+ if (select count(*) from agent_usage where user_id=u and created_at>now()-interval '1 minute')>=20 then raise exception 'COOLDOWN'; end if;
+ if (select count(*) from agent_usage where user_id=u and created_at>now()-interval '1 day')>=300 then raise exception 'DAILYCAP'; end if;
+ insert into agent_usage(user_id) values(u);
+ delete from agent_usage where created_at<now()-interval '2 days';
+ return json_build_object('ok',true);
+end$$;
+revoke all on function public.agent_gate(uuid,text) from public,anon,authenticated;
+grant execute on function public.agent_gate(uuid,text) to anon;
+
+create or replace function public.send_command(p_device uuid, p_action text, p_args jsonb default '{}')
+returns uuid language plpgsql security definer set search_path=public,extensions as $$
+declare i uuid;
 begin
  if auth.uid() is null then raise exception 'auth'; end if;
- insert into claim_attempts(user_id) values(auth.uid());
- delete from claim_attempts where ts<now()-interval '1 hour';
- if (select count(*) from claim_attempts where user_id=auth.uid() and ts>now()-interval '1 minute')>10 then raise exception 'too many attempts'; end if;
- n:=upper(regexp_replace(coalesce(p_code,''),'[^0-9A-Za-z]','','g'));
- if left(n,3)='ORV' then n:=substr(n,4); end if;
- update devices set user_id=auth.uid(),paired=true,pair_code=null,pair_expires=null,last_seen=now()
-  where pair_code=n and not paired and user_id is null and pair_expires>now() returning id,name into d,nm;
- if d is null then raise exception 'invalid or expired code'; end if;
- delete from devices where user_id=auth.uid() and paired and name=nm and id<>d;
- if (select count(*) from devices where user_id=auth.uid())>5 then raise exception 'too many devices'; end if;
- return json_build_object('device_id',d,'name',nm);
+ if not exists(select 1 from devices where id=p_device and user_id=auth.uid() and paired) then raise exception 'no such device'; end if;
+ if p_action not in ('open_url','open_app','volume','lock','screenshot','type_text','go_home','go_back','agent_task','files_list','files_search','files_read','files_send') then raise exception 'action not allowed'; end if;
+ if length(p_args::text)>4000 then raise exception 'too big'; end if;
+ if (select count(*) from commands where user_id=auth.uid() and created_at>now()-interval '1 minute')>=12 then raise exception 'rate limit'; end if;
+ insert into commands(user_id,device_id,action,args) values(auth.uid(),p_device,p_action,coalesce(p_args,'{}')) returning id into i;
+ return i;
 end$$;

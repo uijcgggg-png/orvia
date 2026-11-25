@@ -53,7 +53,7 @@ dialog input,dialog select,dialog textarea{width:100%;background:var(--inp);colo
 .plan h4{margin:0 0 2px;font-size:18px}.plan .pr{color:var(--mut);font-size:13px;margin-bottom:8px}.plan ul{padding-inline-start:18px;margin:8px 0;font-size:14px}.plan .btn{width:100%;margin-top:6px}.plan .btn:disabled{opacity:.5;cursor:not-allowed}
 .tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:999px;background:var(--a);color:#fff;margin-inline-start:6px;vertical-align:middle}
 dialog{max-height:92vh;overflow:auto}
-@media(max-width:760px){#side{position:fixed;left:0;right:auto;top:0;z-index:5;height:100%;transform:translateX(-100%);box-shadow:4px 0 24px #0008;width:min(300px,84vw)}#side.open{transform:none}#side.open~#bd,body.so #bd{display:block}#menu{display:block;width:40px;height:40px}#sclose{display:block}.u .bub{max-width:92%}.plans{grid-template-columns:1fr}.ci button{opacity:1}}
+@media(max-width:760px){#side{position:fixed;left:0;right:auto;top:0;z-index:5;height:100%;transform:translateX(-100%);width:min(300px,84vw)}#side.open{transform:none;box-shadow:4px 0 24px #0008}#side.open~#bd,body.so #bd{display:block}#menu{display:block;width:40px;height:40px}#sclose{display:block}.u .bub{max-width:92%}.plans{grid-template-columns:1fr}.ci button{opacity:1}}
 </style></head><body>
 <aside id="side"><div class="brand"><img src="logo.svg" alt="">Orvia<button id="sclose" aria-label="Close menu">✕</button></div>
 <button class="nb" id="new">＋ New chat</button><div id="list"></div>
@@ -145,7 +145,7 @@ const rd=r.body.getReader(),dec=new TextDecoder();let buf='';
 while(true){const{done,value}=await rd.read();if(done)break;buf+=dec.decode(value,{stream:true});const parts=buf.split('\n');buf=parts.pop();
 for(const p of parts){if(!p.startsWith('data:'))continue;const d=p.slice(5).trim();if(d==='[DONE]')continue;try{const j=JSON.parse(d);const dl=j.choices&&j.choices[0]&&j.choices[0].delta&&j.choices[0].delta.content;if(dl){ai.c+=dl;ai.c=ai.c;el.innerHTML=md(ai.c);$('#msgs').scrollTop=1e9}}catch(_){}}}
 if(!ai.c)el.textContent='(empty reply)';else{cur.m=cur.m;if(S.autoread)speak(ai.c)}}catch(e){ai.c='';el.innerHTML='<span class="err">'+esc(friendly(e))+'</span>';cur.m=cur.m.filter(m=>m!==ai)}
-busy=false;$('#send').disabled=false;saveC();renderList()}
+busy=false;$('#send').disabled=false;saveC();if(ai.c)render();else renderList()}
 function fillSet(){$('#prov').value=S.prov;$('#model_i').value=S.model;$('#key').value=S.key;$('#base').value=S.base;$('#sys').value=S.sys;$('#gh').value=S.gh;$('#vlang').value=S.vlang;$('#autoread').checked=S.autoread;mark();ml()}
 function mark(){document.querySelectorAll('#seg-theme button').forEach(b=>b.classList.toggle('on',b.dataset.v===S.theme));document.querySelectorAll('#seg-lang button').forEach(b=>b.classList.toggle('on',b.dataset.v===S.lang))}
 function ml(){$('#ml').innerHTML=(P[$('#prov').value].models).map(m=>'<option value="'+m+'">').join('')}
